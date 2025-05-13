@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use App\Services\UserService;
+use Illuminate\Support\Facades\Log;
+use App\Models\User;
+
+class UserServiceProvider extends ServiceProvider
+{
+	/**
+	 * Register services.
+	 */
+	public function register(): void
+	{
+		// Bind the UserService class to the service container
+		$this->app->singleton(UserService::class, function ($app) {
+			$userService = new UserService();
+
+			// Wrap each method of UserService with logging
+			return new class ($userService) extends UserService {
+				protected $userService;
+
+				public function __construct(UserService $userService)
+				{
+					$this->userService = $userService;
+				}
+			};
+		});
+	}
+
+	/**
+	 * Bootstrap services.
+	 */
+	public function boot(): void
+	{
+		// Log when a User is created
+		User::created(function ($user) {
+			Log::info("User created: ", ['id' => $user->id, 'name' => $user->name, 'email' => $user->email]);
+		});
+
+		// Log when a User is updated
+		User::updated(function ($user) {
+			Log::info("User updated: ", ['id' => $user->id, 'name' => $user->name, 'email' => $user->email]);
+		});
+
+		// Log when a User is deleted
+		User::deleted(function ($user) {
+			Log::info("User deleted: ", ['id' => $user->id, 'name' => $user->name, 'email' => $user->email]);
+		});
+	}
+}
