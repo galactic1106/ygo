@@ -20,9 +20,8 @@ class UserService
         return $user->update($data);
     }
 
-    public function deleteUser($id)
+    public function deleteUser(User $user)
     {
-        $user = User::find($id);
         return $user ? $user->delete() : false;
     }
 }

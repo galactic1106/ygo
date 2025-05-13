@@ -32,6 +32,9 @@
                     <li class="nav-item fw-medium fs-4">
                         <a class="nav-link active">@yield('location')</a>
                     </li>
+					<li class="nav-item fw-medium fs-4">
+                        
+                    </li>
                 </ul>
             </div>
 
@@ -176,9 +179,10 @@
             </div>
         </div>
     </nav>
-
+	@yield('messages')
+	
     @yield('content')
-
+	
 </body>
 
 </html>
