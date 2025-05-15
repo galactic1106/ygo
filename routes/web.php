@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\CardController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
@@ -28,9 +29,14 @@ Route::get('/search', function () {
 
 Route::get('/account', [AccountController::class, 'index'])->name('account.index');
 Route::post('/account/update/{id}', [AccountController::class, 'edit'])->name('account.edit');
-Route::post('/account/delete/{id}',[AccountController::class,'destroy'])->name('account.destroy');
+Route::post('/account/delete/{id}', [AccountController::class, 'destroy'])->name('account.destroy');
 
 
 Auth::routes();
 
 Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.show');
+
+
+Route::get('/card/{api_id?}', [CardController::class, 'show'])->name('card.show');
+
+Route::get('/test', function (Request $request) {});

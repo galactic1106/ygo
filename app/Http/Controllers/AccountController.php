@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
+use Illuminate\Support\Facades\Hash;
 
 class AccountController extends Controller
 {

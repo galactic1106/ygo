@@ -13,12 +13,23 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- Scripts -->
     @vite(entrypoints: ['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
 <body data-bs-theme="dark" class="d-flex flex-column p-0 m-0 border border-0">
+    <script>
+        $(document).ready(function() {
+            fuzzyFind(
+                $('#search-bar'),
+                $('#search-result'),
+                '{{ route('api.request') }}',
+                '{{ route('api.image') }}',
+                '{{ route('card.show') }}'
+            );
+        });
+    </script>
     <nav data-bs-theme="dark"
         class="d-flex flex-row navbar bg-primary-subtle sticky-top mx-3 border border-2 rounded-bottom-5 border-top-0 border-primary px-3">
         <div class="d-flex flex-fill align-items-center">
@@ -32,8 +43,8 @@
                     <li class="nav-item fw-medium fs-4">
                         <a class="nav-link active">@yield('location')</a>
                     </li>
-					<li class="nav-item fw-medium fs-4">
-                        
+                    <li class="nav-item fw-medium fs-4">
+
                     </li>
                 </ul>
             </div>
@@ -57,7 +68,7 @@
                         <div class="mb-auto">
                             <form class="d-flex mb-3" role="search" method="get" action="{{ route('search') }}">
                                 <input class="form-control me-2 border-2" type="search" placeholder="Search"
-                                    aria-label="Search">
+                                    id="search-bar">
                                 <button class="btn btn-outline-success bg-success-subtle fw-bold border-2"
                                     type="submit">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -67,7 +78,13 @@
                                     </svg>
                                 </button>
                             </form>
+                            <div class="my-2\" id="search-result">
+
+                            </div>
                             <ul class="navbar-nav justify-content-end flex-grow-1 pe-3 mb-auto fw-bold">
+                                <li class="nav-item">
+                                    <hr>
+                                </li>
                                 <li class="nav-item my-0">
                                     <a class="nav-link" aria-current="page" href="{{ route('home') }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
@@ -179,10 +196,10 @@
             </div>
         </div>
     </nav>
-	@yield('messages')
-	
+    @yield('messages')
+
     @yield('content')
-	
+
 </body>
 
 </html>
