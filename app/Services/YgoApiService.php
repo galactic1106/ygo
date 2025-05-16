@@ -38,7 +38,7 @@ class YgoApiService
 					$response = Http::get($this->endpoint . '?' . $queryString);
 					$success = true;
 				} while (!$success);
-				return json_encode(json_decode($response->body()), JSON_PRETTY_PRINT);
+				return json_decode($response->body(), true);
 			}
 		);
 	}

@@ -25,7 +25,7 @@ class YgoApiController extends Controller
 	public function makeRequest(Request $request)
 	{
 		$data = $this->ygoApiService->getCardData($request->all());
-		return response($data, 200)->header('Content-Type', 'application/json');
+		return response(json_encode($data))->header('Content-Type', 'application/json');
 	}
 
 

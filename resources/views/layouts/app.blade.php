@@ -34,17 +34,14 @@
         class="d-flex flex-row navbar bg-primary-subtle sticky-top mx-3 border border-2 rounded-bottom-5 border-top-0 border-primary px-3">
         <div class="d-flex flex-fill align-items-center">
 
-            <div class="p-2 ms-2 me-5 fs-2 fw-bold">
+            <div class="p-2 ms-2 me-0 pe-0 fs-2 fw-bold">
                 <a class="nav-link" href="{{ route('home') }}">Yu-Gi-Oh Marketplace</a>
             </div>
 
             <div class="p-2 flex-grow-1">
                 <ul class="navbar-nav">
-                    <li class="nav-item fw-medium fs-4">
-                        <a class="nav-link active">@yield('location')</a>
-                    </li>
-                    <li class="nav-item fw-medium fs-4">
-
+                    <li class="nav-item fw-bold fs-2">
+                        / @yield('location')
                     </li>
                 </ul>
             </div>
@@ -66,9 +63,9 @@
 
                     <div class="d-flex flex-column h-100">
                         <div class="mb-auto">
-                            <form class="d-flex mb-3" role="search" method="get" action="{{ route('search') }}">
+                            <form class="d-flex mb-3" role="search" method="GET" action="{{ route('browse.index') }}">
                                 <input class="form-control me-2 border-2" type="search" placeholder="Search"
-                                    id="search-bar">
+                                    id="search-bar" name="search-bar">
                                 <button class="btn btn-outline-success bg-success-subtle fw-bold border-2"
                                     type="submit">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
