@@ -4,6 +4,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+
 class YgoApiService
 {
 	protected $endpoint = 'https://db.ygoprodeck.com/api/v7/cardinfo.php';
@@ -12,47 +13,194 @@ class YgoApiService
 	protected $requestNumberKey = 'requests_this_second';
 	protected $imageServerEndpoint = 'https://images.ygoprodeck.com/';
 
+	// Add this private helper for rate limiting
+	private function rateLimit()
+	{
+		while (
+			Cache::remember($this->requestNumberKey, now()->addSecond(), function () {
+				return 0;
+			}) > $this->requestsPerSecond
+		) {
+			usleep(100000);
+		}
+		Cache::increment($this->requestNumberKey);
+	}
+
 	public function getCardData(array $params)
 	{
+		$fname = isset($params['fname']) && strlen($params['fname']) >= 2;
+		$archetype = !empty($params['archetype']);
+		$race = !empty($params['race']);
+
+		// Only block if none of fname, archetype, or race is set
+		if (!$fname && !$archetype && !$race) {
+			return ['data' => []];
+		}
+
 		$queryString = http_build_query($params);
 		$cacheKey = 'ygo_card_' . md5($queryString);
-		//descrizione remember: se la chiave è presente nella cache prendi i dati altrimenti
-		//prendi la default value in questo caso la funzione che fa la richiesta all' api 
+
 		return Cache::remember(
 			$cacheKey,
 			now()->addMinutes($this->cacheMinutes),
 			function () use ($queryString) {
-				$success = false;
 				$response = null;
+				$start = microtime(true);
 				do {
-					if (
-						Cache::remember($this->requestNumberKey, now()->addSecond(), function () {
-							return 0;
-						}) > $this->requestsPerSecond
-					) {
-						usleep(100000);
-						continue;
+					$this->rateLimit();
+					try {
+						$response = Http::timeout(10)->get($this->endpoint . '?' . $queryString);
+					} catch (\Exception $e) {
+						return ['data' => []];
 					}
-					Cache::increment($this->requestNumberKey);
+					// Stop retrying if more than 10 seconds have passed
+					if ((microtime(true) - $start) > 10) {
+						return ['data' => []];
+					}
+				} while (!$response->successful());
+				// Limit the number of cards returned to 50 (or any reasonable number)
+				$data = $response->json();
 
-					$response = Http::get($this->endpoint . '?' . $queryString);
-					$success = true;
-				} while (!$success);
-				return json_decode($response->body(), true);
+				return $data;
 			}
 		);
 	}
-
 	public function getImage($url)
 	{
 		$path = str_replace($this->imageServerEndpoint, '', $url);
-		//controlla se l'immagine è già stata scaricata 
+
+		// Check if the image is already downloaded
 		if (!Storage::disk('public')->exists($path)) {
-			//scarica l'immagine
+			// Download the image
 			$img = Http::get($url)->body();
 			Storage::disk('public')->put($path, $img);
 		}
-		//restituisci percorso del immagine
+		// Return the image path
 		return $path;
+	}
+
+	public function getArchetypes()
+	{
+		$cacheKey = 'ygo_archetypes';
+		return Cache::remember($cacheKey, now()->addHours(12), function () {
+			$url = 'https://db.ygoprodeck.com/api/v7/archetypes.php';
+			$this->rateLimit();
+			$response = Http::get($url);
+			return $response->json();
+		});
+	}
+
+	public function getAttributes()
+	{
+		// Hardcoded list from YGOPRODeck docs
+		return [
+			'DARK',
+			'DIVINE',
+			'EARTH',
+			'FIRE',
+			'LIGHT',
+			'WATER',
+			'WIND'
+		];
+	}
+
+	public function getTypes()
+	{
+		// Hardcoded list from YGOPRODeck docs
+		return [
+			'Aqua',
+			'Beast',
+			'Beast-Warrior',
+			'Creator-God',
+			'Cyberse',
+			'Dinosaur',
+			'Divine-Beast',
+			'Dragon',
+			'Fairy',
+			'Fiend',
+			'Fish',
+			'Insect',
+			'Machine',
+			'Plant',
+			'Psychic',
+			'Pyro',
+			'Reptile',
+			'Rock',
+			'Sea Serpent',
+			'Spellcaster',
+			'Thunder',
+			'Warrior',
+			'Winged Beast',
+			'Wyrm',
+			'Zombie',
+			'Normal',
+			'Effect',
+			'Fusion',
+			'Ritual',
+			'Synchro',
+			'Xyz',
+			'Pendulum',
+			'Link',
+			'Spell',
+			'Trap',
+			'Toon',
+			'Gemini',
+			'Tuner',
+			'Spirit',
+			'Union',
+			'Flip'
+		];
+	}
+	public function getRaces()
+	{
+		// YGO monster, spell, and trap races/properties (from YGOPRODeck docs)
+		return [
+			'Aqua',
+			'Beast',
+			'Beast-Warrior',
+			'Creator-God',
+			'Cyberse',
+			'Dinosaur',
+			'Divine-Beast',
+			'Dragon',
+			'Fairy',
+			'Fiend',
+			'Fish',
+			'Insect',
+			'Machine',
+			'Plant',
+			'Psychic',
+			'Pyro',
+			'Reptile',
+			'Rock',
+			'Sea Serpent',
+			'Spellcaster',
+			'Thunder',
+			'Warrior',
+			'Winged Beast',
+			'Wyrm',
+			'Zombie',
+			'Normal',
+			'Effect',
+			'Fusion',
+			'Ritual',
+			'Synchro',
+			'Xyz',
+			'Pendulum',
+			'Link',
+			'Spell',
+			'Trap',
+			'Toon',
+			'Gemini',
+			'Tuner',
+			'Spirit',
+			'Union',
+			'Flip',
+			'Continuous',
+			'Counter',
+			'Equip',
+			'Field',
+			'Quick-Play'
+		];
 	}
 }

@@ -6,54 +6,169 @@
 
 @section('content')
     <div class="container px-5 mt-3" style="min-width: 100%">
-
         <div class="row">
-            <div class="col-3">
-                <form role="search" method="GET" action="{{ route('browse.index') }}">
-                    <div class="list-group">
-                        <div class="list-group-item row d-flex">
-                            <div class="col border border-0 m-0 p-0 pe-2">
-                                <input class="form-control border-2" type="search" placeholder="Search" id="search-bar"
-                                    name="search-bar">
+            <div class="col-3 d-flex flex-column align-items-center">
+                <div class="sticky-top " style="min-width: 100%">
+                    <div class="d-flex flex-column justify-content-center" style="min-height: 80vh;">
+                        <form role="search" method="GET" action="{{ route('browse.index') }}">
+                            <div class="list-group">
+                                <div class="list-group-item">
+                                    <div class="input-group">
+                                        <label for="fname" class="input-group-text">Name</label>
+                                        <input class="form-control border-2" type="search" placeholder="Search"
+                                            id="fname" name="fname" value="{{ request('fname') }}">
+                                    </div>
+                                </div>
+                                <div class="list-group-item">
+                                    <div class="input-group">
+                                        <label for="archetype" class="input-group-text">Archetype</label>
+                                        <select class="form-select" id="archetype" name="archetype">
+                                            <option value="">Any</option>
+                                            @foreach ($archetypes as $archetype)
+                                                <option value="{{ $archetype['archetype_name'] }}"
+                                                    {{ request('archetype') == $archetype['archetype_name'] ? 'selected' : '' }}>
+                                                    {{ $archetype['archetype_name'] }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="list-group-item">
+                                    <div class="input-group">
+                                        <label class="input-group-text" for="attribute">Attribute</label>
+                                        <select class="form-select" id="attribute" name="attribute">
+                                            <option value="">Any</option>
+                                            @foreach ($attributes as $attribute)
+                                                <option value="{{ $attribute }}"
+                                                    {{ request('attribute') == $attribute ? 'selected' : '' }}>
+                                                    {{ $attribute }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="list-group-item">
+                                    <div class="input-group">
+                                        <label class="input-group-text" for="type">Type</label>
+                                        <select class="form-select" id="type" name="type">
+                                            <option value="">Any</option>
+                                            @foreach ($types as $type)
+                                                <option value="{{ $type }}"
+                                                    {{ request('type') == $type ? 'selected' : '' }}>
+                                                    {{ $type }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="list-group-item">
+                                    <div class="input-group">
+                                        <label class="input-group-text" for="race">Race</label>
+                                        <select class="form-select" id="race" name="race">
+                                            <option value="">Any</option>
+                                            @foreach ($races as $race)
+                                                <option value="{{ $race }}"
+                                                    {{ request('race') == $race ? 'selected' : '' }}>
+                                                    {{ $race }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="list-group-item">
+                                    <div class="input-group">
+                                        <label class="input-group-text" for="atk">ATK</label>
+                                        <input type="number" class="form-control" id="atk" name="atk"
+                                            value="{{ request('atk') }}">
+                                    </div>
+                                </div>
+                                <div class="list-group-item">
+                                    <div class="input-group">
+                                        <label class="input-group-text" for="def">DEF</label>
+                                        <input type="number" class="form-control" id="def" name="def"
+                                            value="{{ request('def') }}">
+                                    </div>
+                                </div>
+                                <div class="list-group-item">
+                                    <div class="input-group">
+                                        <label class="input-group-text" for="level">Level</label>
+                                        <input type="number" class="form-control" id="level" name="level"
+                                            value="{{ request('level') }}">
+                                    </div>
+                                </div>
+                                <div class="list-group-item text-end">
+                                    <button type="submit" class="btn btn-primary">Search</button>
+                                </div>
                             </div>
-                            <button class="btn btn-outline-success bg-success-subtle fw-bold border-2 col-2" type="submit">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                                    class="bi bi-search" viewBox="0 0 20 20">
-                                    <path
-                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                                </svg>
-                            </button>
-                        </div>
+                        </form>
+                        @if (empty(request('fname')) && empty(request('archetype')) && empty(request('race')))
+                            <div class="alert alert-warning mt-3">
+                                Please use at least one of: <strong>Name</strong>, <strong>Archetype</strong>, or
+                                <strong>Race</strong> to search.
+                            </div>
+                        @endif
                     </div>
-
-                </form>
+                </div>
             </div>
             <div class="col-9">
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
-                    @forelse($cards as $card)
-                        <div class="col">
-                            <div class="card h-100 shadow-sm border border-1 border-light">
-                                <a href="{{ route('card.show', $card['id']) }}">
-                                    <img src="{{ $card['card_images'][0]['image_url_cropped'] ?? $card['card_images'][0]['image_url'] }}"
-                                        class="card-img-top" alt="{{ $card['name'] }}">
-                                </a>
-                                <div class="card-body">
-                                    <h5 class="card-title text-truncate" title="{{ $card['name'] }}">{{ $card['name'] }}
-                                    </h5>
-                                    <p class="card-text small text-muted mb-1">{{ $card['type'] ?? '' }}</p>
-                                    <p class="card-text small">{{ \Illuminate\Support\Str::limit($card['desc'] ?? '', 60) }}
-                                    </p>
-                                </div>
-                                <div class="card-footer text-end">
-                                    <a href="{{ route('card.show', $card['id']) }}" class="btn btn-primary btn-sm">View</a>
+                    @if (empty(request('fname')) && empty(request('archetype')) && empty(request('race')))
+                        {{-- Do not show "No cards found" if user hasn't searched --}}
+                    @else
+                        @forelse($cards as $card)
+                            <div class="col">
+                                <div class="card h-100 shadow-sm border border-1 border-light">
+                                    <a href="{{ route('card.show', $card['id']) }}">
+                                        <img src="{{ $card['card_images'][0]['image_url_cropped'] ?? $card['card_images'][0]['image_url'] }}"
+                                            class="card-img-top" alt="{{ $card['name'] }}"
+                                            style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; object-position: top;">
+                                    </a>
+                                    <div class="card-body">
+                                        <h5 class="card-title text-truncate" title="{{ $card['name'] }}">
+                                            {{ $card['name'] }}</h5>
+                                        <ul class="list-group list-group-flush small ">
+                                            @if (isset($card['archetype']))
+                                                <li class="list-group-item px-0 py-1"><strong>Archetype:</strong>
+                                                    {{ $card['archetype'] }}</li>
+                                            @endif
+                                            @if (isset($card['attribute']))
+                                                <li class="list-group-item px-0 py-1"><strong>Attribute:</strong>
+                                                    {{ $card['attribute'] }}</li>
+                                            @endif
+                                            @if (isset($card['type']))
+                                                <li class="list-group-item px-0 py-1"><strong>Type:</strong>
+                                                    {{ $card['type'] }}</li>
+                                            @endif
+                                            @if (isset($card['race']))
+                                                <li class="list-group-item px-0 py-1"><strong>Race:</strong>
+                                                    {{ $card['race'] }}</li>
+                                            @endif
+                                            @if (isset($card['atk']))
+                                                <li class="list-group-item px-0 py-1"><strong>ATK:</strong>
+                                                    {{ $card['atk'] }}</li>
+                                            @endif
+                                            @if (isset($card['def']))
+                                                <li class="list-group-item px-0 py-1"><strong>DEF:</strong>
+                                                    {{ $card['def'] }}</li>
+                                            @endif
+                                            @if (isset($card['level']))
+                                                <li class="list-group-item px-0 py-1"><strong>Level:</strong>
+                                                    {{ $card['level'] }}</li>
+                                            @endif
+                                        </ul>
+                                    </div>
+                                    <div class="card-footer text-end">
+                                        <a href="{{ route('card.show', $card['id']) }}"
+                                            class="btn btn-primary btn-sm">View</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @empty
-                        @section('messages')
-                            <div class="alert alert-info mx-5 my-3">No cards found.</div>
-                        @endsection
-                    @endforelse
+                        @empty
+                            <div class="col-12">
+                                <div class="alert alert-info mx-5 my-3">No cards found.</div>
+                            </div>
+                        @endforelse
+                    @endif
                 </div>
             </div>
         </div>

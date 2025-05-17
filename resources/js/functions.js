@@ -16,7 +16,7 @@ function makeSearchList(data, cardShowUrl, imgUrl, searchResult) {
 				//src: '{{ route('api.image') }}?url=' + item.card_images[0].img_url_cropped
 				src: imgUrl + '?url=' + item.card_images[0].image_url_cropped,
 				class: 'col-3 p-0 border border-0 m-0',
-
+				style:"aspect-ratio: 1 / 1; object-fit: cover;object-position: top;"
 			});
 			let span = $('<span>', {
 				text: item.name,
