@@ -52,7 +52,7 @@ function fuzzyFind(searchBar, searchResult, cardDataUrl, imgUrl, cardShowUrl) {
 					console.log(error)
 				}
 			});
-		}, 750);
+		},500);
 	});
 }
 

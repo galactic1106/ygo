@@ -6,9 +6,15 @@ use Illuminate\Http\Request;
 
 class CardController extends Controller
 {
-	public function show($api_id, YgoApiService $ygoApiService)
+	protected $ygoApiService;
+	public function __construct(YgoApiService $ygoApiService)
 	{
-		$data = $ygoApiService->getCardData(['id' => $api_id]);
+		$this->ygoApiService = $ygoApiService;
+	}
+
+	public function show($id)
+	{
+		$data = $this->ygoApiService->getCardData(['id'=>$id]);
 		$card = isset($data['data'][0]) ? $data['data'][0] : null;
 		return view('card.show', ['card' => $card]);
 	}

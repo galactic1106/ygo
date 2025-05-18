@@ -14,19 +14,8 @@ class UserServiceProvider extends ServiceProvider
 	 */
 	public function register(): void
 	{
-		// Bind the UserService class to the service container
-		$this->app->singleton(UserService::class, function ($app) {
-			$userService = new UserService();
-
-			// Wrap each method of UserService with logging
-			return new class ($userService) extends UserService {
-				protected $userService;
-
-				public function __construct(UserService $userService)
-				{
-					$this->userService = $userService;
-				}
-			};
+		$this->app->bind(UserService::class, function ($app) {
+			return new UserService();
 		});
 	}
 
@@ -48,6 +37,10 @@ class UserServiceProvider extends ServiceProvider
 		// Log when a User is deleted
 		User::deleted(function ($user) {
 			Log::info("User deleted: ", ['id' => $user->id, 'name' => $user->name, 'email' => $user->email]);
+		});
+		// Log when a User is retrieved
+		User::retrieved(function ($user) {
+			Log::info("User retrieved: ", ['id' => $user->id, 'name' => $user->name, 'email' => $user->email]);
 		});
 	}
 }

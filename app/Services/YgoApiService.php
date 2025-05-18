@@ -28,15 +28,7 @@ class YgoApiService
 
 	public function getCardData(array $params)
 	{
-		$fname = isset($params['fname']) && strlen($params['fname']) >= 2;
-		$archetype = !empty($params['archetype']);
-		$race = !empty($params['race']);
-
-		// Only block if none of fname, archetype, or race is set
-		if (!$fname && !$archetype && !$race) {
-			return ['data' => []];
-		}
-
+		
 		$queryString = http_build_query($params);
 		$cacheKey = 'ygo_card_' . md5($queryString);
 

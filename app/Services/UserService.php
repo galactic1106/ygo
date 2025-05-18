@@ -8,7 +8,7 @@ class UserService
 {
     public function getUserById($id)
     {
-        return User::find($id);
+        return User::findOrFail($id);
     }
     public function createUser(array $data)
     {

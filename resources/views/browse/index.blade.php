@@ -118,7 +118,7 @@
                         @forelse($cards as $card)
                             <div class="col">
                                 <div class="card h-100 shadow-sm border border-1 border-light">
-                                    <a href="{{ route('card.show', $card['id']) }}">
+                                    <a href="{{ route('card.show', ['id' => $card['id']]) }}">
                                         <img src="{{ $card['card_images'][0]['image_url_cropped'] ?? $card['card_images'][0]['image_url'] }}"
                                             class="card-img-top" alt="{{ $card['name'] }}"
                                             style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; object-position: top;">
@@ -158,7 +158,7 @@
                                         </ul>
                                     </div>
                                     <div class="card-footer text-end">
-                                        <a href="{{ route('card.show', $card['id']) }}"
+                                        <a href="{{ route('card.show', ['id' => $card['id']]) }}"
                                             class="btn btn-primary btn-sm">View</a>
                                     </div>
                                 </div>

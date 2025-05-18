@@ -22,7 +22,7 @@
     <script>
         $(document).ready(function() {
             fuzzyFind(
-                $('#search-bar'),
+                $('#fname'),
                 $('#search-result'),
                 '{{ route('api.request') }}',
                 '{{ route('api.image') }}',
@@ -63,9 +63,10 @@
 
                     <div class="d-flex flex-column h-100">
                         <div class="mb-auto">
-                            <form class="d-flex mb-3" role="search" method="GET" action="{{ route('browse.index') }}">
+                            <form class="d-flex mb-3" role="search" method="GET"
+                                action="{{ route('browse.index') }}">
                                 <input class="form-control me-2 border-2" type="search" placeholder="Search"
-                                    id="search-bar" name="search-bar">
+                                    id="fname" name="fname">
                                 <button class="btn btn-outline-success bg-success-subtle fw-bold border-2"
                                     type="submit">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
