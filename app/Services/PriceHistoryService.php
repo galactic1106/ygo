@@ -5,23 +5,31 @@ use App\Models\PriceHistory;
 
 class PriceHistoryService
 {
-	public function getPriceHistoryById($id)
+	public function get($id)
 	{
 		return PriceHistory::findOrFail($id);
 	}
 
-	public function createPriceHistory(array $data)
+	public function create(array $data)
 	{
 		return PriceHistory::create($data);
 	}
 
-	public function updatePriceHistory(PriceHistory $priceHistory, array $data)
+	public function update(PriceHistory $priceHistory, array $data)
 	{
 		return $priceHistory->update($data);
 	}
 
-	public function deletePriceHistory(PriceHistory $priceHistory)
+	public function delete(PriceHistory $priceHistory)
 	{
 		return $priceHistory ? $priceHistory->delete() : false;
+	}
+	public function all()
+	{
+		return PriceHistory::all();
+	}
+	public function getPriceHistoryByOfferId($offerId)
+	{
+		return PriceHistory::where('offer_id', $offerId)->first();
 	}
 }

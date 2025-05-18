@@ -22,6 +22,5 @@ class YgoApiServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        
     }
 }

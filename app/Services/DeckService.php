@@ -4,23 +4,27 @@ use App\Models\Deck;
 
 class DeckService
 {
-	public function getDeckById($id)
+	public function get($id)
 	{
 		return Deck::findOrFail($id);
 	}
 
-	public function createDeck(array $data)
+	public function create(array $data)
 	{
 		return Deck::create($data);
 	}
 
-	public function updateDeck(Deck $deck, array $data)
+	public function update(Deck $deck, array $data)
 	{
 		return $deck->update($data);
 	}
 
-	public function deleteDeck(Deck $deck)
+	public function delete(Deck $deck)
 	{
 		return $deck ? $deck->delete() : false;
+	}
+	public function all()
+	{
+		return Deck::all();
 	}
 }

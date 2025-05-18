@@ -2,27 +2,50 @@
 namespace App\Services;
 
 use App\Models\Offer;
+use DB;
 
 class OfferService
 {
-	public function getOfferById($id)
+	public function get($id)
 	{
 		return Offer::findOrFail($id);
 	}
-	public function createOffer(array $data)
+	public function create(array $data)
 	{
 		return Offer::create($data);
 	}
-	public function updateOffer(Offer $offer, array $data)
+	public function update(Offer $offer, array $data)
 	{
 		return $offer->update($data);
 	}
-	public function deleteOffer(Offer $offer)
+	public function delete(Offer $offer)
 	{
 		return $offer ? $offer->delete() : false;
 	}
 	public function getOfferByCardId($cardId)
 	{
-		return Offer::where('card_id', $cardId)->first();
+		$all=Offer::all();
+		$offers=[];
+		foreach ($all as $offer) {
+			if ($offer->card->id == $cardId) {
+				$offers[]=$offer;
+			}
+		}
+		return $offers;
+	}
+	public function getOfferByCardApiId($apiId)
+	{
+		$all=Offer::all();
+		$offers=[];
+		foreach ($all as $offer) {
+			if ($offer->card->api_id == $apiId) {
+				$offers[]=$offer;
+			}
+		}
+		return $offers;
+	}
+	public function all()
+	{
+		return Offer::all();
 	}
 }

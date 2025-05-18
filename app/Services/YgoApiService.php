@@ -95,7 +95,6 @@ class YgoApiService
 			'WIND'
 		];
 	}
-
 	public function getTypes()
 	{
 		// Hardcoded list from YGOPRODeck docs

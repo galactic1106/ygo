@@ -4,23 +4,28 @@ namespace App\Services;
 use App\Models\Order;
 class OrderService
 {
-	public function getOrderById($id)
+	public function get($id)
 	{
 		return Order::findOrFail($id);
 	}
 
-	public function createOrder(array $data)
+	public function create(array $data)
 	{
 		return Order::create($data);
 	}
 
-	public function updateOrder(Order $order, array $data)
+	public function update(Order $order, array $data)
 	{
 		return $order->update($data);
 	}
 
-	public function deleteOrder(Order $order)
+	public function delete(Order $order)
 	{
 		return $order ? $order->delete() : false;
 	}
-}	
+	
+	public function all()
+	{
+		return Order::all();
+	}
+}

@@ -8,4 +8,5 @@ class Item extends Pivot
 {
     protected $table = 'items';
 	protected $fillable=['quantity'];
+
 }

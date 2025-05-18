@@ -6,22 +6,27 @@ use App\Models\User;
 
 class UserService
 {
-    public function getUserById($id)
+    public function get($id)
     {
         return User::findOrFail($id);
     }
-    public function createUser(array $data)
+
+    public function create(array $data)
     {
         return User::create($data);
     }
 
-    public function updateUser(User $user, array $data)
+    public function update(User $user,array $data)
     {
         return $user->update($data);
     }
 
-    public function deleteUser(User $user)
+    public function delete(User $user)
     {
         return $user ? $user->delete() : false;
+    }
+    public function all()
+    {
+        return User::all();
     }
 }
