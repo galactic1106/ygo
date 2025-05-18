@@ -24,6 +24,7 @@ class CreditCardService
 	{
 		return $creditCard ? $creditCard->delete() : false;
 	}
+
 	public function all()
 	{
 		return CreditCard::all();

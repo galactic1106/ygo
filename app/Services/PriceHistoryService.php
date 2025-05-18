@@ -24,10 +24,12 @@ class PriceHistoryService
 	{
 		return $priceHistory ? $priceHistory->delete() : false;
 	}
+
 	public function all()
 	{
 		return PriceHistory::all();
 	}
+
 	public function getPriceHistoryByOfferId($offerId)
 	{
 		return PriceHistory::where('offer_id', $offerId)->first();

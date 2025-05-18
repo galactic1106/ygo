@@ -24,7 +24,7 @@ class ItemService
 	{
 		return $item ? $item->delete() : false;
 	}
-	
+
 	public function all()
 	{
 		return Item::all();

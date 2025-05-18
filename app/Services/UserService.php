@@ -16,7 +16,7 @@ class UserService
         return User::create($data);
     }
 
-    public function update(User $user,array $data)
+    public function update(User $user, array $data)
     {
         return $user->update($data);
     }
@@ -25,6 +25,7 @@ class UserService
     {
         return $user ? $user->delete() : false;
     }
+
     public function all()
     {
         return User::all();

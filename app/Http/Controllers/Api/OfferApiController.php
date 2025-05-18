@@ -20,32 +20,37 @@ class OfferApiController extends Controller
 		$offer = $this->offerService->create($param);
 		return response()->json($offer);
 	}
-	public function update(Request $request, $id)
+
+	public function update(Request $request, Offer $offer)
 	{
 		$param = $request->all();
-		$offer = $this->offerService->update($id, $param);
-		return response()->json($offer);
+		$this->offerService->update($offer, $param);
+		return response()->json($offer->fresh());
 	}
-	public function delete($id)
+
+	public function delete(Offer $offer)
 	{
-		$offer = $this->offerService->delete($id);
-		return response()->json($offer);
+		$this->offerService->delete($offer);
+		return response()->json(['success' => true]);
 	}
+
 	public function all()
 	{
 		$offers = $this->offerService->all();
 		return response()->json($offers);
 	}
-	public function find($id)
+
+	public function find(Offer $offer)
 	{
-		$offer = $this->offerService->get($id);
 		return response()->json($offer);
 	}
+
 	public function findOfferByCardId($cardId)
 	{
 		$offer = $this->offerService->getOfferByCardId($cardId);
 		return response()->json($offer);
 	}
+
 	public function findOfferByCardApiId($apiId)
 	{
 		$offer = $this->offerService->getOfferByCardApiId($apiId);

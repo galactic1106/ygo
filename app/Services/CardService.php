@@ -23,7 +23,8 @@ class CardService
 	{
 		return $card ? $card->delete() : false;
 	}
-	public function All()
+
+	public function all()
 	{
 		return Card::all();
 	}

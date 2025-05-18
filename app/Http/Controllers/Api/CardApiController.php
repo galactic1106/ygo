@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\CardService;
 use App\Models\Card;
+
 class CardApiController extends Controller
 {
 	protected $cardService;
@@ -13,33 +14,38 @@ class CardApiController extends Controller
 	{
 		$this->cardService = $cardService;
 	}
+
 	public function create(Request $request)
 	{
 		$param = $request->all();
 		$card = $this->cardService->create($param);
 		return response()->json($card);
 	}
-	public function update(Request $request, $id)
+
+	public function update(Request $request, Card $card)
 	{
 		$param = $request->all();
-		$card = $this->cardService->update($id, $param);
-		return response()->json($card);
+		$this->cardService->update($card, $param);
+		return response()->json($card->fresh());
 	}
-	public function delete($id)
+
+	public function delete(Card $card)
 	{
-		$card = $this->cardService->delete($id);
-		return response()->json($card);
+		$this->cardService->delete($card);
+		return response()->json(['success' => true]);
 	}
-	public function All()
+
+	public function all()
 	{
-		$cards = $this->cardService->All();
+		$cards = $this->cardService->all();
 		return response()->json($cards);
 	}
-	public function find($id)
+
+	public function find(Card $card)
 	{
-		$card = $this->cardService->get($id);
 		return response()->json($card);
 	}
+
 	public function findCardByApiId($apiId)
 	{
 		$card = $this->cardService->getCardByApiId($apiId);

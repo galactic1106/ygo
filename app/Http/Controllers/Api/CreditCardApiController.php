@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Services\CreditCardService;
 use Illuminate\Http\Request;
+use App\Models\CreditCard;
 
 class CreditCardApiController extends Controller
 {
@@ -12,33 +13,36 @@ class CreditCardApiController extends Controller
 	{
 		$this->creditCardService = $creditCardService;
 	}
+
 	public function create(Request $request)
 	{
 		$param = $request->all();
 		$card = $this->creditCardService->create($param);
 		return response()->json($card);
 	}
-	public function update(Request $request, $id)
+
+	public function update(Request $request, CreditCard $credit_card)
 	{
 		$param = $request->all();
-		$card = $this->creditCardService->update($id, $param);
-		return response()->json($card);
+		$this->creditCardService->update($credit_card, $param);
+		return response()->json($credit_card->fresh());
 	}
-	public function delete($id)
+
+	public function delete(CreditCard $credit_card)
 	{
-		$card = $this->creditCardService->delete($id);
-		return response()->json($card);
+		$this->creditCardService->delete($credit_card);
+		return response()->json(['success' => true]);
 	}
+
 	public function all()
 	{
 		$cards = $this->creditCardService->all();
 		return response()->json($cards);
 	}
-	public function find($id)
+
+	public function find(CreditCard $credit_card)
 	{
-		$card = $this->creditCardService->get($id);
-		return response()->json($card);	
+		return response()->json($credit_card);
 	}
 }
 
-	

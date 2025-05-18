@@ -23,6 +23,7 @@ class DeckService
 	{
 		return $deck ? $deck->delete() : false;
 	}
+
 	public function all()
 	{
 		return Deck::all();

@@ -20,26 +20,28 @@ class DeckApiController extends Controller
 		$deck = $this->deckService->create($param);
 		return response()->json($deck);
 	}
-	public function update(Request $request, $id)
+
+	public function update(Request $request, Deck $deck)
 	{
 		$param = $request->all();
-		$deck = $this->deckService->update($id, $param);
-		return response()->json($deck);
+		$this->deckService->update($deck, $param);
+		return response()->json($deck->fresh());
 	}
-	public function delete($id)
+
+	public function delete(Deck $deck)
 	{
-		$deck = $this->deckService->delete($id);
-		return response()->json($deck);
+		$this->deckService->delete($deck);
+		return response()->json(['success' => true]);
 	}
+
 	public function all()
 	{
 		$decks = $this->deckService->all();
 		return response()->json($decks);
 	}
-	public function find($id)
+
+	public function find(Deck $deck)
 	{
-		$deck = $this->deckService->get($id);
 		return response()->json($deck);
 	}
 }
-	

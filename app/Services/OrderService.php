@@ -2,6 +2,7 @@
 
 namespace App\Services;
 use App\Models\Order;
+
 class OrderService
 {
 	public function get($id)
@@ -23,7 +24,7 @@ class OrderService
 	{
 		return $order ? $order->delete() : false;
 	}
-	
+
 	public function all()
 	{
 		return Order::all();

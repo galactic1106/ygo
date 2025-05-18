@@ -44,22 +44,22 @@ class AccountController extends Controller
 		switch ($request->input('updating')) {
 			case 'name':
 				$name = $request->input('new-name');
-				$this->userService->updateUser(auth()->user(), ['name' => $name]);
+				$this->userService->update(auth()->user(), ['name' => $name]);
 				break;
 
 			case 'email':
 				$email = $request->input('new-email');
-				$this->userService->updateUser(auth()->user(), ['email' => $email]);
+				$this->userService->update(auth()->user(), ['email' => $email]);
 				break;
 
 			case 'password':
 				$password = $request->input('new-password');
-				$this->userService->updateUser(auth()->user(), ['password' => Hash::make($password)]);
+				$this->userService->update(auth()->user(), ['password' => Hash::make($password)]);
 				break;
 
 			case 'phone-number':
 				$phoneNumber = $request->input('new-phone-number');
-				$this->userService->updateUser(auth()->user(), ['phone_number' => $phoneNumber]);
+				$this->userService->update(auth()->user(), ['phone_number' => $phoneNumber]);
 				break;
 		}
 		return redirect()->route('account.index')->with('message', 'update successfull');
@@ -75,7 +75,7 @@ class AccountController extends Controller
 		if (auth()->user()->id != $id)
 			return redirect()->route('account.index')->with('error', 'mismatch id error');
 
-		$this->userService->deleteUser(auth()->user());
+		$this->userService->delete(auth()->user());
 		return redirect()->route('home')->with('message','user deleted successfully');
 	}
 }

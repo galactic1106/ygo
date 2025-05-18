@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class UserApiController extends Controller
 {
@@ -19,16 +20,14 @@ class UserApiController extends Controller
 		$user = $this->userService->create($data);
 		return response()->json($user, 201);
 	}
-	public function update(Request $request, $id)
+	public function update(Request $request, User $user)
 	{
 		$data = $request->all();
-		$user = $this->userService->get($id);
 		$this->userService->update($user, $data);
-		return response()->json($user, 200);
+		return response()->json($user->fresh(), 200);
 	}
-	public function delete($id)
+	public function delete(User $user)
 	{
-		$user = $this->userService->get($id);
 		$this->userService->delete($user);
 		return response()->json(null, 204);
 	}
@@ -37,9 +36,8 @@ class UserApiController extends Controller
 		$users = $this->userService->all();
 		return response()->json($users, 200);
 	}
-	public function find($id)
+	public function find(User $user)
 	{
-		$user = $this->userService->get($id);
 		return response()->json($user, 200);
 	}
 }

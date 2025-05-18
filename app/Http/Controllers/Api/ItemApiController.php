@@ -1,8 +1,9 @@
-<?php 
+<?php
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Services\ItemService;
 use Illuminate\Http\Request;
+use App\Models\Item;
 
 class ItemApiController extends Controller
 {
@@ -11,27 +12,33 @@ class ItemApiController extends Controller
 	{
 		$this->itemService = $itemService;
 	}
+
 	public function create(Request $request)
 	{
-		$orderId= $request->input('order_id');
-		$offerId= $request->input('offer_id');
-		$quantity= $request->input('quantity');
-		$this->itemService->create([
+		$orderId = $request->input('order_id');
+		$offerId = $request->input('offer_id');
+		$quantity = $request->input('quantity');
+		$item = $this->itemService->create([
 			'order_id' => $orderId,
 			'offer_id' => $offerId,
 			'quantity' => $quantity
 		]);
+		return response()->json($item);
 	}
-	public function update(Request $request, $id)
+
+	public function update(Request $request, Item $item)
 	{
 		$quantity = $request->input('quantity');
-		$this->itemService->update($id, [
+		$this->itemService->update($item, [
 			'quantity' => $quantity
 		]);
+		return response()->json($item->fresh());
 	}
-	public function delete($id)
+
+	public function delete(Item $item)
 	{
-		$this->itemService->delete($id);
+		$this->itemService->delete($item);
+		return response()->json(['success' => true]);
 	}
 
 	public function all()
@@ -40,9 +47,8 @@ class ItemApiController extends Controller
 		return response()->json($items);
 	}
 
-	public function find($id)
+	public function find(Item $item)
 	{
-		$item = $this->itemService->get($id);
 		return response()->json($item);
 	}
 }
