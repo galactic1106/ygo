@@ -15,10 +15,14 @@ class Offer extends Model
 
 	protected $table='offers';
 	protected $fillable=[
+		'id',
 		'card_quantity',
-		'state',
+		'image_number',
+		'quality',
 		'price',
 		'description'
+		,'card_id'
+		,'user_id'
 	];
 
 	public function user(){
@@ -35,6 +39,6 @@ class Offer extends Model
 
 	public function orders()
 	{
-		return $this->belongsToMany(Order::class)->withPivot('quantity');
+		return $this->belongsToMany(Order::class,'items')->with(Item::class)->withPivot('quantity');
 	}
 }

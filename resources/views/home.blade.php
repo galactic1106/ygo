@@ -7,20 +7,20 @@
         <h2 class="mb-4">Newest Cards</h2>
         <ul class="nav nav-tabs mb-3" id="cardTabs" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="monsters-tab" data-bs-toggle="tab" data-bs-target="#monsters"
+                <button class="nav-link active fw-medium" id="monsters-tab" data-bs-toggle="tab" data-bs-target="#monsters"
                     type="button" role="tab" aria-controls="monsters" aria-selected="true">Monsters</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="spells-tab" data-bs-toggle="tab" data-bs-target="#spells" type="button"
-                    role="tab" aria-controls="spells" aria-selected="false">Spell Cards</button>
+                <button class="nav-link fw-medium" id="spells-tab" data-bs-toggle="tab" data-bs-target="#spells"
+                    type="button" role="tab" aria-controls="spells" aria-selected="false">Spell Cards</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="traps-tab" data-bs-toggle="tab" data-bs-target="#traps" type="button"
-                    role="tab" aria-controls="traps" aria-selected="false">Trap Cards</button>
+                <button class="nav-link fw-medium" id="traps-tab" data-bs-toggle="tab" data-bs-target="#traps"
+                    type="button" role="tab" aria-controls="traps" aria-selected="false">Trap Cards</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="extra-tab" data-bs-toggle="tab" data-bs-target="#extra" type="button"
-                    role="tab" aria-controls="extra" aria-selected="false">Extra Deck</button>
+                <button class="nav-link fw-medium" id="extra-tab" data-bs-toggle="tab" data-bs-target="#extra"
+                    type="button" role="tab" aria-controls="extra" aria-selected="false">Extra Deck</button>
             </li>
         </ul>
         <div class="tab-content" id="cardTabsContent">

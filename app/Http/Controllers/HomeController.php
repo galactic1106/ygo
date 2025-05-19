@@ -18,6 +18,7 @@ class HomeController extends Controller
 	 */
 	public function __construct(YgoApiService $ygoApiService)
 	{
+		$this->middleware('auth');
 		$this->ygoApiService = $ygoApiService;
 	}
 
@@ -28,6 +29,7 @@ class HomeController extends Controller
 	 */
 	public function index()
 	{
+	
 		// Main Deck Monsters (excluding Extra Deck types)
 		$monsterTypes = [
 			'Normal Monster',

@@ -13,7 +13,7 @@ class Deck extends Model
 
 
 	protected $table='decks';
-	protected $fillable=['name','notes'];
+	protected $fillable=['name','notes','user_id'];
 
 	public function user(){
 		return $this->belongsTo(User::class);

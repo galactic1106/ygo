@@ -50,10 +50,9 @@ class OfferApiController extends Controller
 		$offer = $this->offerService->getOfferByCardId($cardId);
 		return response()->json($offer);
 	}
-
-	public function findOfferByCardApiId($apiId)
+	public function getQualities()
 	{
-		$offer = $this->offerService->getOfferByCardApiId($apiId);
-		return response()->json($offer);
+		$qualities = $this->offerService->getQualities();
+		return response()->json($qualities);
 	}
 }

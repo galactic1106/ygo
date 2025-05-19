@@ -11,8 +11,8 @@ class Card extends Model
 	use HasFactory;
 
 	protected $table = 'cards';
-	protected $fillable = ['api_id'];
-
+	protected $fillable = ['id'];
+	public $timestamps = false;
 	public function offers()
 	{
 		return $this->hasMany(Offer::class);

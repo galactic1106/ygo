@@ -11,7 +11,7 @@ class CardService
 
 	public function create(array $data)
 	{
-		return Card::create($data);
+		return Card::createOrFirst($data, ['id' => $data['id']]);
 	}
 
 	public function update(Card $card, array $data)
@@ -27,10 +27,5 @@ class CardService
 	public function all()
 	{
 		return Card::all();
-	}
-
-	public function getCardByApiId($apiId)
-	{
-		return Card::where('api_id', $apiId)->first();
 	}
 }

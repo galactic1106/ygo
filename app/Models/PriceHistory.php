@@ -10,7 +10,7 @@ class PriceHistory extends Model
     /** @use HasFactory<\Database\Factories\PriceHistoryFactory> */
     use HasFactory;
 	protected $table = 'price_history';
-	protected $fillable=['old_price'];
+	protected $fillable=['old_price','offer_id','created_at'];
 
 	public function offer()
 	{

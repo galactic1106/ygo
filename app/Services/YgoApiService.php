@@ -28,14 +28,19 @@ class YgoApiService
 
 	public function getCardData(array $params)
 	{
-		
+
 		$queryString = http_build_query($params);
 		$cacheKey = 'ygo_card_' . md5($queryString);
 
 		return Cache::remember(
 			$cacheKey,
 			now()->addMinutes($this->cacheMinutes),
-			function () use ($queryString) {
+			function () use ($queryString, $params) {
+				\Log::info('YgoApiService:getCardData request', [
+					'endpoint' => $this->endpoint,
+					'params' => $params,
+					'full_url' => $this->endpoint . '?' . $queryString,
+				]);
 				$response = null;
 				$start = microtime(true);
 				do {
@@ -43,10 +48,17 @@ class YgoApiService
 					try {
 						$response = Http::timeout(10)->get($this->endpoint . '?' . $queryString);
 					} catch (\Exception $e) {
+						\Log::error('YgoApiService:getCardData error', [
+							'exception' => $e->getMessage(),
+							'params' => $params,
+						]);
 						return ['data' => []];
 					}
 					// Stop retrying if more than 10 seconds have passed
 					if ((microtime(true) - $start) > 10) {
+						\Log::warning('YgoApiService:getCardData timeout', [
+							'params' => $params,
+						]);
 						return ['data' => []];
 					}
 				} while (!$response->successful());

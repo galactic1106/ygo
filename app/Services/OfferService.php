@@ -32,13 +32,12 @@ class OfferService
 
 	public function getOfferByCardId($cardId)
 	{
+		// $cardId is the API id, stored in cards.id and offers.card_id
 		return Offer::where('card_id', $cardId)->get();
 	}
 
-	public function getOfferByCardApiId($apiId)
+	public function getQualities()
 	{
-		return Offer::whereHas('card', function ($query) use ($apiId) {
-			$query->where('api_id', $apiId);
-		})->get();
+		return ['mint', 'near mint', 'excellent', 'good', 'light played', 'played', 'poor'];
 	}
 }

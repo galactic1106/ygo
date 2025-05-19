@@ -1,2 +1,2 @@
 import './bootstrap';
-import './functions.js'
+import './functions.js';

@@ -46,9 +46,4 @@ class CardApiController extends Controller
 		return response()->json($card);
 	}
 
-	public function findCardByApiId($apiId)
-	{
-		$card = $this->cardService->getCardByApiId($apiId);
-		return response()->json($card);
-	}
 }

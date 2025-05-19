@@ -17,7 +17,10 @@ class Order extends Model
 		'city',
 		'street',
 		'house_number',
-		'zip_code'
+		'zip_code',
+		'offer_id',
+		'user_id',
+		'credit_card_id',
 	];
 
 	public function user()
@@ -27,7 +30,7 @@ class Order extends Model
 
 	public function offers()
 	{
-		return $this->belongsToMany(Offer::class)->withPivot('quantity');
+		return $this->belongsToMany(Offer::class,'items')->using(Item::class)->withPivot('quantity');
 	}
 
 	public function creditCard()

@@ -14,8 +14,11 @@ class CardController extends Controller
 
 	public function show($id)
 	{
-		$data = $this->ygoApiService->getCardData(['id'=>$id]);
+		$data = $this->ygoApiService->getCardData(['id' => $id]);
 		$card = isset($data['data'][0]) ? $data['data'][0] : null;
+		$data = $this->ygoApiService->getCardData(['name' => $card['name']]);
+		$card = isset($data['data'][0]) ? $data['data'][0] : null;
+
 		return view('card.show', ['card' => $card]);
 	}
 }

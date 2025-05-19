@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 class Item extends Pivot
 {
     protected $table = 'items';
-	protected $fillable=['quantity'];
+	protected $fillable=['order_id','offer_id','quantity'];
 
 }
