@@ -46,7 +46,7 @@
                             @endphp
                             <tr>
                                 <td>
-                                    {{ $offer->card->name}}
+                                    #{{ $offer->card->id}}
                                 </td>
                                 <td>
                                     {{ $offer->user->name}}
