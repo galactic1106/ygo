@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use App\Services\YgoApiService;
-use Symfony\Component\VarDumper\VarDumper;
 
 class HomeController extends Controller
 {
@@ -18,7 +14,6 @@ class HomeController extends Controller
 	 */
 	public function __construct(YgoApiService $ygoApiService)
 	{
-		$this->middleware('auth');
 		$this->ygoApiService = $ygoApiService;
 	}
 

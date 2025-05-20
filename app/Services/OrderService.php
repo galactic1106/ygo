@@ -2,12 +2,19 @@
 
 namespace App\Services;
 use App\Models\Order;
-
+use GuzzleHttp\Promise\Create;
+use App\Models\User;
 class OrderService
 {
 	public function get($id)
 	{
 		return Order::findOrFail($id);
+	}
+	public function getCart(User $user)
+	{
+		return Order::where('user_id','=',$user->id)
+		->where('state','=','cart')
+		->get()->first();
 	}
 
 	public function create(array $data)

@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Models\Offer;
+use App\Models\Item;
 class Order extends Model
 {
 	/** @use HasFactory<\Database\Factories\OrderFactory> */
@@ -18,9 +19,9 @@ class Order extends Model
 		'street',
 		'house_number',
 		'zip_code',
-		'offer_id',
 		'user_id',
 		'credit_card_id',
+		'id'
 	];
 
 	public function user()
@@ -30,7 +31,9 @@ class Order extends Model
 
 	public function offers()
 	{
-		return $this->belongsToMany(Offer::class,'items')->using(Item::class)->withPivot('quantity');
+		return $this->belongsToMany(Offer::class, 'items')
+			->withPivot('quantity')
+			->using(Item::class);
 	}
 
 	public function creditCard()

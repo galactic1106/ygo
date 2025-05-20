@@ -12,8 +12,9 @@ class CreditCard extends Model
     protected $table = 'credit_cards';
     protected $fillable = [
         'card_number',
-        'expiration_date',
-        'cvv'
+        'card_expiration',
+        'cvv',
+        'id'
     ];
 
     public function order()

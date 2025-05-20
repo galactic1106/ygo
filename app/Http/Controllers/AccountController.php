@@ -20,10 +20,12 @@ class AccountController extends Controller
 	{
 
 		$user = auth()->user();
+		$user->load(['orders.creditCard']);
 		if (count($user->orders) > 0)
 			$orderCount = true;
 		else
 			$orderCount = false;
+		//return response()->json($user);
 		return view('account', ['user' => $user, 'orderCount' => $orderCount]);
 	}
 

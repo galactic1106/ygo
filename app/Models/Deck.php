@@ -8,18 +8,20 @@ use PhpParser\Node\Expr\FuncCall;
 
 class Deck extends Model
 {
-    /** @use HasFactory<\Database\Factories\DeckFactory> */
-    use HasFactory;
+	/** @use HasFactory<\Database\Factories\DeckFactory> */
+	use HasFactory;
 
 
-	protected $table='decks';
-	protected $fillable=['name','notes','user_id'];
+	protected $table = 'decks';
+	protected $fillable = ['name', 'notes', 'user_id', 'id'];
 
-	public function user(){
+	public function user()
+	{
 		return $this->belongsTo(User::class);
 	}
 
-	public function cards(){
-		return $this->belongsToMany(Card::class)->withPivot('quantity');
-	}	
+	public function cards()
+	{
+		return $this->belongsToMany(Card::class, 'composed')->withPivot('quantity')->using(Composed::class);
+	}
 }

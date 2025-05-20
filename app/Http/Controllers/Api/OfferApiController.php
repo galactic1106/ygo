@@ -36,19 +36,43 @@ class OfferApiController extends Controller
 
 	public function all()
 	{
-		$offers = $this->offerService->all();
+		$offers = $this->offerService->all()->load('user:id,name');
 		return response()->json($offers);
 	}
 
-	public function find(Offer $offer)
+	public function find($id, $cardId = null)
 	{
-		return response()->json($offer);
+		if ($cardId) {
+			return $this->findOfferByCardId($cardId);
+		}
+		if (!$id) {
+			return response()->json(['error' => 'ID not provided']);
+		}
+		$offer = $this->offerService->get($id);
+		if ($offer) {
+			$offer->load('user:id,name');
+			return response()->json($offer);
+		}
+		return response()->json(['error' => 'Offer not found']);
 	}
 
 	public function findOfferByCardId($cardId)
 	{
-		$offer = $this->offerService->getOfferByCardId($cardId);
-		return response()->json($offer);
+		$offers = $this->offerService->getOfferByCardId($cardId);
+		if ($offers) {
+			$offers->load(['user:id,name', 'orders']);
+			$offers = $offers->map(function ($offer) {
+				return [
+					'id' => $offer->id,
+					'user' => $offer->user,
+					'price' => $offer->price,
+					'card_quantity' => $offer->card_quantity,
+					'available_quantity' => $offer->available_quantity
+				];
+			});
+			return response()->json($offers);
+		}
+		return response()->json(['error' => 'Offer(s) not found'], 404);
 	}
 	public function getQualities()
 	{

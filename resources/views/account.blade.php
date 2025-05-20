@@ -176,6 +176,10 @@
             <button data-bs-toggle="collapse" data-bs-target=".past-orders"
                 class="btn btn-primary bg-primary-subtle border-2 fs-4 border-start-0 rounded-start-0 py-2 px-3 mb-3">Past
                 Orders</button>
+            <button data-bs-toggle="collapse" data-bs-target=".my-offers"
+                class="btn btn-primary bg-primary-subtle border-2 fs-4 border-start-0 rounded-start-0 py-2 px-3 mb-3">
+                My Offers
+            </button>
         </div>
         <div class="d-flex flex-column flex-fill flex-grow-1 mx-5 text-nowrap">
             <div class="account-data collapse-horizontal">
@@ -231,28 +235,64 @@
                             </button>
                         </div>
                     </div>
-
-                    <button class="btn btn-danger p-3 bg-danger-subtle fw-bold col-1" data-bs-toggle="modal"
-                        data-bs-target="#delete-modal">DELETE
-                        USER</button>
+                    <div>
+                        <button class="btn btn-danger p-3 bg-danger-subtle fw-bold" data-bs-toggle="modal"
+                            data-bs-target="#delete-modal">DELETE USER</button>
+                    </div>
 
                 </div>
             </div>
             <div class="collapse past-orders collapse-horizontal">
                 @if ($orderCount)
                     @foreach ($user->orders as $order)
-                        <div class="card card-body rounded-3 fs-5 mb-3">
-                            <a href="{{ route('order.show', ['id' => $order->id]) }}">{{ $order->order_date }} payed with
-                                ****-****-{{ $order->card_number }}</a>
-                        </div>
+                        @if ($order->state != 'cart' && $order->creditCard->card_number)
+                            <div class="card card-body rounded-3 fs-5 mb-3">
+                                <a href="{{ route('order.show', ['id' => $order->id]) }}">
+                                    {{ $order->order_date }} payed with
+                                    ****-****-{{ $order->creditCard->card_number }}
+                                </a>
+                            </div>
+                        @endif
                     @endforeach
                 @else
                     <div class="alert alert-warning" role="alert">
                         No orders where found!
                     </div>
                 @endif
-
-
+            </div>
+            <div class="collapse my-offers collapse-horizontal">
+                <div class="card card-body rounded-3 fs-5 mb-3">
+                    <h4>My Offers</h4>
+                    @if ($user->offers->count())
+                        <ul class="list-group">
+                            @foreach ($user->offers as $offer)
+                                <li class="list-group-item d-flex justify-content-start align-items-center">
+                                    Card ID:
+                                    <a class="d-inline link link-info"
+                                        href="{{ route('card.show', ['id' => $offer->card_id]) }}">
+                                        {{ $offer->card_id }}
+                                    </a> |
+                                    Quantity: {{ $offer->card_quantity }} |
+                                    Available quantity: {{ $offer->available_quantity }} |
+                                    Price:
+                                    <form action="{{ route('offer.changePrice', $offer->id) }}" method="POST"
+                                        class="d-inline ms-1 me-2">
+                                        @csrf
+                                        <input type="number" name="price" id="price" value="{{ $offer->price }}" min="0.01"
+                                            step="0.01" style="width: 90px;" class="form-control border border-2 rounded d-inline border-primary" required>
+                                        <button type="submit"
+                                            class="btn btn-sm btn-outline-primary py-0 px-2">Update</button>
+                                    </form>
+                                    <span class="badge bg-primary rounded-pill ms-2">{{ ucfirst($offer->quality) }}</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @else
+                        <div class="alert alert-warning" role="alert">
+                            No offers found!
+                        </div>
+                    @endif
+                </div>
             </div>
         </div>
     </div>

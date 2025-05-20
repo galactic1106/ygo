@@ -32,7 +32,7 @@ Route::put('/offers/{offer}', [OfferApiController::class, 'update']);
 Route::delete('/offers/{offer}', [OfferApiController::class, 'delete']);
 Route::get('/offers/qualities', [OfferApiController::class, 'getQualities'])->name('api.qualities');
 Route::get('/offers', [OfferApiController::class, 'all']);
-Route::get('/offers/{offer}', [OfferApiController::class, 'find']);
+Route::get('/offers?id={id?}&cardId={cardId?}', [OfferApiController::class, 'find']);
 
 
 // Order API

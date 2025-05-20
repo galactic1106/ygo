@@ -20,12 +20,16 @@ class BrowseController extends Controller
 			$param['fname'] = $param['search-bar'];
 			unset($param['search-bar']);
 		}
+		if (!isset($param['num'])) {
+			$param['num'] = 40;
+		}
+		if (!isset($param['offset'])) {
+			$param['offset'] = 0;
+		}
 
 		$cards = [];
-		if (!empty($param)) {
-			$cards = $this->ygoApiService->getCardData($param);
-			$cards = isset($cards['data']) ? $cards['data'] : [];
-		}
+		$cards = $this->ygoApiService->getCardData($param);
+		$cards = isset($cards['data']) ? $cards['data'] : [];	
 
 		$archetypes = $this->ygoApiService->getArchetypes();
 		$attributes = $this->ygoApiService->getAttributes();

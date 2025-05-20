@@ -19,7 +19,6 @@ class Card extends Model
 	}
 	public function decks()
 	{
-
-		return $this->belongsToMany(Deck::class)->withPivot('quantity');
+		return $this->belongsToMany(Deck::class, 'composed')->withPivot('quantity')->using(Composed::class);
 	}
 }

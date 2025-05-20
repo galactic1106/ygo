@@ -9,7 +9,9 @@ class ItemService
 {
 	public function get(Order $order,Offer $offer)
 	{
-		return Item::where('order_id','=',$order->id)->where('offer_id','=',$offer->id)->first();
+		return Item::where('order_id','=',$order->id)
+		->where('offer_id','=',$offer->id)
+		->first();
 	}
 
 	public function create(array $data)

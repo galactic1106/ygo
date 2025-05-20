@@ -85,9 +85,6 @@
                             class="list-group-item list-group-item-action border border-2 border-success bg-success-subtle fs-5 fw-semibold"
                             data-bs-toggle="modal" data-bs-target="#sell-modal">Sell</button>
                         <button type="button"
-                            class="list-group-item list-group-item-action border border-2 border-info bg-info-subtle fs-5 fw-semibold"
-                            data-bs-toggle="modal" data-bs-target="#deck-modal">Add to deck</button>
-                        <button type="button"
                             class="list-group-item list-group-item-action border border-2 border-warning bg-warning-subtle fs-5 fw-semibold"
                             data-bs-toggle="modal" data-bs-target="#cart-modal">Add to cart</button>
                     </ul>
@@ -179,7 +176,7 @@
                         <div class="modal-body">
                             <!-- Select Card Image -->
                             <div class="mb-3">
-                                <label class="form-label fw-semibold">Select Card Image:</label>
+                                <label class="form-label fw-semibold">Select Card Artwork:</label>
                                 <div class="d-flex flex-wrap gap-2">
                                     @foreach ($card['card_images'] as $index => $image)
                                         <div>
@@ -226,20 +223,18 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-success">Create Offer</button>
+                            <button type="submit" class="btn btn-success">Make Offer</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
         <script>
-            setTimeout(() => {
-                loadQualities('#sell-quality', '{{ route('api.qualities') }}');
-                setupOfferModal(
-                    {{ $card['id'] }},
-                    'input[name="selected_image"]',
-                    '#offers-table'
-                );
-            }, 300)
+            loadQualities('#sell-quality', '{{ route('api.qualities') }}');
+            setupOfferModal(
+                {{ $card['id'] }},
+                'input[name="selected_image"]',
+                '#offers-table'
+            );
         </script>
     @endsection

@@ -14,24 +14,16 @@
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="{{ asset('js/functions.js') }}"></script>
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+
 </head>
 
 <body data-bs-theme="dark" class="d-flex flex-column p-0 m-0 border border-0">
     @yield('body-begin')
 
-    <script>
-        $(document).ready(function() {
-            fuzzyFind(
-                $('#fname'),
-                $('#search-result'),
-                '{{ route('api.request') }}',
-                '{{ route('api.image') }}',
-                '{{ route('card.show') }}'
-            );
-        });
-    </script>
+
     <nav data-bs-theme="dark"
         class="d-flex flex-row navbar bg-primary-subtle sticky-top mx-3 border border-2 rounded-bottom-5 border-top-0 border-primary px-3">
         <div class="d-flex flex-fill align-items-center">
@@ -98,6 +90,17 @@
                                 <li class="nav-item">
                                     <hr>
                                 </li>
+                                <li class="nav-item my-0">
+                                    <a class="nav-link" aria-current="page" href="{{ route('browse.index') }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+</svg>
+                                        Browse
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <hr>
+                                </li>
                                 <li class="nav-item">
 
                                     <a class="nav-link" href="{{ route('cart.index') }}">
@@ -113,7 +116,7 @@
                                     <hr>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('decks') }}">
+                                    <a class="nav-link" href="{{ route('decks.index') }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
                                             fill="currentColor" class="bi bi-stack" viewBox="0 0 20 20">
                                             <path
@@ -189,7 +192,22 @@
     @yield('messages')
 
     @yield('content')
-
+    <script>
+        $(document).ready($('#fname').on('input click change', function() {
+            fuzzyFind(
+                $('#fname'),
+                '{{ route('api.request') }}',
+                function(data) {
+                    makeSearchList(
+                        data,
+                        '{{ route('card.show') }}',
+                        '{{ route('api.image') }}',
+                        $('#search-result')
+                    );
+                }
+            )
+        }));
+    </script>
 </body>
 
 </html>
