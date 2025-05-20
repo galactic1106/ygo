@@ -30,12 +30,12 @@ function makeSearchList(data, cardShowUrl, imgUrl, searchResult) {
 		});
 	} catch (error) {
 		console.log('error in make search list');
-		console.log(error);	
-	 }
+		console.log(error);
+	}
 }
 
 let timer = null;
-function fuzzyFind(searchBar,cardDataUrl,callback) {
+function fuzzyFind(searchBar, cardDataUrl, callback) {
 	clearTimeout(timer);
 	timer = setTimeout(function () {
 		const url = cardDataUrl + '?fname=' + encodeURIComponent(searchBar.val());
@@ -144,23 +144,19 @@ function filterCards(searchUrl, fname, archetype, attribute, type, race, atk, de
 		type: 'GET',
 		dataType: 'json',
 		data: {
-			fname: $(fname).val(),
-			archetype: $(archetype).val(),
-			attribute: $(attribute).val(),
-			type: $(type).val(),
-			race: $(race).val(),
-			atk: $(atk).val(),
-			def: $(def).val(),
-			level: $(level).val(),
+			fname: fname,
+			archetype: archetype,
+			attribute: attribute,
+			type: type,
+			race: race,
+			atk: atk,
+			def: def,
+			level: level,
 			num: num,
 			offset: offset
 		},
 		success: function (data) {
-			try {
-				callback(data.data);
-			} catch (e) {
-
-			}
+			callback(data.data);
 		},
 		error: function (error) {
 			console.log(error);
@@ -170,7 +166,9 @@ function filterCards(searchUrl, fname, archetype, attribute, type, race, atk, de
 }
 
 function renderFilteredCards(data, cardContainer, imgEndpoint, cardShowUrl) {
-	// data should be an array of card objects
+	console.log('in renderFilteredCards');
+
+	console.log(data);
 	let html = '';
 	if (!data || !data.length) {
 		html = `<div class="col-12">
