@@ -45,5 +45,6 @@ Route::post('/offer/make', [OfferController::class, 'makeOffer'])->name('offer.m
 
 Route::get('/card/{id?}', [CardController::class, 'show'])->name('card.show');
 
+
 Route::get('/browse', [BrowseController::class, 'index'])->name('browse.index');
 

@@ -77,4 +77,34 @@ class CartController extends BaseController
 
 		return back()->with('success', 'Card added to cart');
 	}
+
+	public function remove(Request $request)
+	{
+		$request->validate([
+			'offer_id' => 'required|integer|exists:offers,id',
+			'quantity' => 'nullable|integer|min:1'
+		]);
+
+		$user = $this->userService->get(auth()->id());
+		$cart = $this->orderService->getCart($user);
+
+		$offer = $this->offerService->get($request->input('offer_id'));
+		$item = $this->itemService->get($cart, $offer);
+
+		if ($item) {
+			$removeQty = $request->input('quantity', $item->quantity);
+			if ($item->quantity > $removeQty) {
+				// Decrease quantity
+				$this->itemService->update($item, [
+					'quantity' => $item->quantity - $removeQty
+				]);
+			} else {
+				// Remove item completely
+				$this->itemService->delete($item);
+			}
+			return back()->with('success', 'Item updated in cart');
+		} else {
+			return back()->with('error', 'Item not found in cart');
+		}
+	}
 }

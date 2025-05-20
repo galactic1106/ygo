@@ -7,11 +7,11 @@ use App\Models\Order;
 
 class ItemService
 {
-	public function get(Order $order,Offer $offer)
+	public function get(Order $order, Offer $offer)
 	{
-		return Item::where('order_id','=',$order->id)
-		->where('offer_id','=',$offer->id)
-		->first();
+		return Item::where('order_id', '=', $order->id)
+			->where('offer_id', '=', $offer->id)
+			->first();
 	}
 
 	public function create(array $data)
@@ -26,7 +26,9 @@ class ItemService
 
 	public function delete(Item $item)
 	{
-		return $item ? $item->delete() : false;
+		return Item::where('order_id', $item->order_id)
+			->where('offer_id', $item->offer_id)
+			->delete();
 	}
 
 	public function all()

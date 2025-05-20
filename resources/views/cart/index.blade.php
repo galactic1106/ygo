@@ -16,6 +16,7 @@
                         <th>Price</th>
                         <th>Quantity</th>
                         <th>Subtotal</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,9 +46,9 @@
                                                     console.log(data);
                                                     // Update the image source
                                                     $("#card-image-{{ $offer->card->id }}")
-													.attr("src", '{{route('api.image')}}' +"?url="+data.card_images[0].image_url);
-													// Update the card name and ID
-													$("#card-name-{{ $offer->card->id }}").text(data.name);
+                                                        .attr("src", '{{ route('api.image') }}' + "?url=" + data.card_images[0].image_url);
+                                                    // Update the card name and ID
+                                                    $("#card-name-{{ $offer->card->id }}").text(data.name);
                                                 },
                                                 error: function(xhr, status, error) {
                                                     // Handle errors
@@ -70,6 +71,16 @@
                                     $total += $subtotal;
                                 @endphp
                                 ${{ number_format($subtotal, 2) }}
+                            </td>
+                            <td>
+                                <form action="{{ route('cart.remove') }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    <input type="hidden" name="offer_id" value="{{ $offer->id }}">
+                                    <button type="submit" class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Remove this card from cart?')">
+                                        Remove
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     @endforeach
