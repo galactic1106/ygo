@@ -8,12 +8,10 @@ function makeSearchList(data, cardShowUrl, imgUrl, searchResult) {
 
 			});
 			let link = $('<a>', {
-				//href: '{{ route('card.show') }}' + item.id
 				href: cardShowUrl + "\/" + item.id,
 				class: 'd-flex row',
 			});
 			let img = $('<img>', {
-				//src: '{{ route('api.image') }}?url=' + item.card_images[0].img_url_cropped
 				src: imgUrl + '?url=' + item.card_images[0].image_url_cropped,
 				class: 'col-3 p-0 border border-0 m-0',
 				style: "aspect-ratio: 1 / 1; object-fit: cover;object-position: top;"
