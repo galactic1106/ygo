@@ -75,7 +75,7 @@ function filterOffers(imageRadioSelector = 'input[name="selected_image"]', offer
 }
 
 function fetchOffers(cardId, callback) {
-	$.getJSON('/api/offers?cardId=' + cardId)
+	$.getJSON('/api/offers?id=&cardId=' + cardId)
 		.done(function (data) {
 			callback(data);
 		})
@@ -113,6 +113,13 @@ function setupOfferModal(cardId, imageRadioSelector = 'input[name="selected_imag
 	function updateOffers() {
 		let imageNumber = $(imageRadioSelector + ':checked').data('image-number');
 		fetchOffers(cardId, function (offers) {
+			console.log('in fetchOffers');
+			console.log(offers);
+			offers.forEach(function (offer) {
+				if(offer.card_id != cardId) {
+					offers=offers.filter(o => o.card_id == cardId);
+				}
+			});
 			renderOffers(offers, imageNumber, offersTableSelector);
 		});
 	}

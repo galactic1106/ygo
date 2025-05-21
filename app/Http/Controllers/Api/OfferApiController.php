@@ -40,7 +40,7 @@ class OfferApiController extends Controller
 		return response()->json($offers);
 	}
 
-	public function find($id, $cardId = null)
+	public function find($id, $cardId)
 	{
 		if ($cardId) {
 			return $this->findOfferByCardId($cardId);
