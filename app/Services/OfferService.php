@@ -22,7 +22,7 @@ class OfferService
 
 	public function delete(Offer $offer)
 	{
-		return $offer ? $offer->delete() : false;
+		return $offer->delete();
 	}
 
 	public function all()

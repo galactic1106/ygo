@@ -22,7 +22,7 @@ class CreditCardService
 
 	public function delete(CreditCard $creditCard)
 	{
-		return $creditCard ? $creditCard->delete() : false;
+		return $creditCard->delete();
 	}
 
 	public function all()

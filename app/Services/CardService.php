@@ -11,7 +11,7 @@ class CardService
 
 	public function create(array $data)
 	{
-		return Card::createOrFirst($data, ['id' => $data['id']]);
+		return Card::createOrFirst($data);
 	}
 
 	public function update(Card $card, array $data)

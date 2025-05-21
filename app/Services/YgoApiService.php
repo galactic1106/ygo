@@ -4,16 +4,17 @@ namespace App\Services;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Log;
 
 class YgoApiService
 {
 	protected $endpoint = 'https://db.ygoprodeck.com/api/v7/cardinfo.php';
-	protected $cacheMinutes = 60;
-	protected $requestsPerSecond = 15; //lasci un margine il limite e 20
-	protected $requestNumberKey = 'requests_this_second';
 	protected $imageServerEndpoint = 'https://images.ygoprodeck.com/';
-
-	// Add this private helper for rate limiting
+	protected $cacheMinutes = 60;
+	protected $requestsPerSecond = 15; //actuall limit = 20
+	protected $requestNumberKey = 'requests_this_second';
+	
+	//private helper for rate limiting
 	private function rateLimit()
 	{
 		while (
@@ -36,7 +37,7 @@ class YgoApiService
 			$cacheKey,
 			now()->addMinutes($this->cacheMinutes),
 			function () use ($queryString, $params) {
-				\Log::info('YgoApiService:getCardData request', [
+				Log::info('YgoApiService:getCardData request', [
 					'endpoint' => $this->endpoint,
 					'params' => $params,
 					'full_url' => $this->endpoint . '?' . $queryString,
@@ -48,7 +49,7 @@ class YgoApiService
 					try {
 						$response = Http::timeout(10)->get($this->endpoint . '?' . $queryString);
 					} catch (\Exception $e) {
-						\Log::error('YgoApiService:getCardData error', [
+						Log::error('YgoApiService:getCardData error', [
 							'exception' => $e->getMessage(),
 							'params' => $params,
 						]);
@@ -56,15 +57,13 @@ class YgoApiService
 					}
 					// Stop retrying if more than 10 seconds have passed
 					if ((microtime(true) - $start) > 10) {
-						\Log::warning('YgoApiService:getCardData timeout', [
+						Log::warning('YgoApiService:getCardData timeout', [
 							'params' => $params,
 						]);
 						return ['data' => []];
 					}
 				} while (!$response->successful());
-				// Limit the number of cards returned to 50 (or any reasonable number)
 				$data = $response->json();
-
 				return $data;
 			}
 		);

@@ -22,7 +22,7 @@ class PriceHistoryService
 
 	public function delete(PriceHistory $priceHistory)
 	{
-		return $priceHistory ? $priceHistory->delete() : false;
+		return $priceHistory->delete();
 	}
 
 	public function all()
@@ -30,8 +30,4 @@ class PriceHistoryService
 		return PriceHistory::all();
 	}
 
-	public function getPriceHistoryByOfferId($offerId)
-	{
-		return PriceHistory::where('offer_id', $offerId)->first();
-	}
 }

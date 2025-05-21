@@ -16,6 +16,8 @@ class CardController extends Controller
 	{
 		$data = $this->ygoApiService->getCardData(['id' => $id]);
 		$card = isset($data['data'][0]) ? $data['data'][0] : null;
+		
+		//la ricerca per nome ritorna più informazioni di quella per id
 		$data = $this->ygoApiService->getCardData(['name' => $card['name']]);
 		$card = isset($data['data'][0]) ? $data['data'][0] : null;
 

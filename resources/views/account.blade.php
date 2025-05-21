@@ -278,8 +278,9 @@
                                     <form action="{{ route('offer.changePrice', $offer->id) }}" method="POST"
                                         class="d-inline ms-1 me-2">
                                         @csrf
-                                        <input type="number" name="price" id="price" value="{{ $offer->price }}" min="0.01"
-                                            step="0.01" style="width: 90px;" class="form-control border border-2 rounded d-inline border-primary" required>
+                                        <input type="number" name="price" id="price" value="{{ $offer->price }}"
+                                            min="0.01" step="0.01" style="width: 90px;"
+                                            class="form-control border border-2 rounded d-inline border-primary" required>
                                         <button type="submit"
                                             class="btn btn-sm btn-outline-primary py-0 px-2">Update</button>
                                     </form>

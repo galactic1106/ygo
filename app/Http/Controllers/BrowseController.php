@@ -12,7 +12,7 @@ class BrowseController extends Controller
 	{
 		$this->ygoApiService = $ygoApiService;
 	}
-
+	
 	public function index(Request $request)
 	{
 		$param = $request->all();
@@ -34,14 +34,14 @@ class BrowseController extends Controller
 		$archetypes = $this->ygoApiService->getArchetypes();
 		$attributes = $this->ygoApiService->getAttributes();
 		$types = $this->ygoApiService->getTypes();
-		$races = $this->ygoApiService->getRaces(); // <-- Add this line
+		$races = $this->ygoApiService->getRaces(); 
 
 		return view('browse.index', [
 			'cards' => $cards,
 			'archetypes' => $archetypes,
 			'attributes' => $attributes,
 			'types' => $types,
-			'races' => $races, // <-- And this line
+			'races' => $races, 
 		]);
 	}
 }
