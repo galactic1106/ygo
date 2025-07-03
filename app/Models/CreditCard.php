@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/**
+ * @mixin IdeHelperCreditCard
+ */
 class CreditCard extends Model
 {
     /** @use HasFactory<\Database\Factories\CreditCardFactory> */

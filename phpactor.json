@@ -1,0 +1,20 @@
+{
+    "rpc": {
+        "enabled": true
+    },
+    "completion": {
+        "enabled": true
+    },
+    "indexer": {
+        "enabled": true,
+        "scan": {
+            "include": ["app/", "database/", "routes/"]
+        }
+    },
+    "class_to_file": {
+        "enabled": true
+    },
+    "reflection": {
+        "enabled": true
+    }
+}
