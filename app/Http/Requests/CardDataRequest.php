@@ -34,8 +34,9 @@ class CardDataRequest extends FormRequest
                 function ($attribute, $value, $fail) {
                     $ids = array_map('trim', explode(',', $value));
                     foreach ($ids as $id) {
+                        // Corrected: Enforce exactly 8 digits.
                         if (!is_numeric($id) || strlen($id) !== 8) {
-                            $fail("The '$attribute' field must be a comma-separated list of numeric IDs, each up to 8 digits long.");
+                            $fail("The '$attribute' field must be a comma-separated list of 8-digit numeric IDs.");
                             return;
                         }
                     }
