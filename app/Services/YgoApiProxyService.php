@@ -36,7 +36,7 @@ class YgoApiProxyService
     private function rateLimit(): void
     {
         while (
-            Cache::remember($this->requestThisSecondKey, now()->addSecond(), function () {
+            Cache::memo()->remember($this->requestThisSecondKey, now()->addSecond(), function () {
                 $this->limitResetTime = now()->addSecond();
                 return 0;
             }) >= $this->requestsPerSecond
@@ -310,17 +310,57 @@ class YgoApiProxyService
         return $frameTypes;
     }
 
-    public function getArchetypes()
+   
+    /**
+         * @return array<int, string>
+         */
+        public function getArchetypes(): array
+        {
+            $cacheKey = 'archetypes_list';
+            return Cache::remember($cacheKey, now()->addHours(24), function () {
+                $this->rateLimit();
+                try {
+                    $response = Http::timeout(60)->get($this->cardArchetypesEndPoint);
+                    if ($response->failed() || !is_array($response->json())) {
+                        return []; // Return an empty array on failure or malformed response
+                    }
+                    // Pluck the 'archetype_name' from each object and return as a simple array
+                    return collect($response->json())->pluck('archetype_name')->all();
+                } catch (ConnectException $e) {
+                    return []; // Return an empty array on connection error
+                }
+            });
+        }
+
+
+    public function getAttributes()
     {
-        $cacheKey = 'archetypes';
-        return Cache::remember($cacheKey, now()->addHours(24), function () {
-            $this->rateLimit();
-            try {
-                $request = Http::timeout(60)->get($this->cardDataEndpoint);
-                return $request->json();
-            } catch (ConnectException $e) {
-                return null;
-            }
-        });
+        $attributes = ['dark', 'light', 'earth', 'water', 'fire', 'wind', 'divine'];
+        return $attributes;
+    }
+
+    public function getLinkMarkers()
+    {
+        $linkMarkers = ['top', 'bottom', 'left', 'right', 'bottom-left', 'bottom-right', 'top-left', 'top-right'];
+        return $linkMarkers;
+    }
+    
+    public function getBanLists(){
+        $banLists=['tcg', 'ocg', 'goat'];
+        return $banLists;
+    }
+    public function getSortables(){
+        $sortables=['atk', 'def', 'name', 'type', 'level', 'id', 'new'];
+        return $sortables;
+    }
+    
+    public function getFormats(){
+        $formats = ['tcg', 'goat', 'ocg goat', 'speed duel', 'master duel', 'rush duel', 'duel links'];
+        return $formats;
+    }
+    
+    public function getRegions(){
+        $regions=['tcg', 'ocg'];
+        return $regions;
     }
 }
