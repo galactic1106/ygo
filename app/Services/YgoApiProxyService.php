@@ -12,6 +12,7 @@ class YgoApiProxyService
     private string $cardDataEndpoint = 'https://db.ygoprodeck.com/api/v7/cardinfo.php';
     private string $imageEndpoint = 'https://images.ygoprodeck.com/images';
     private string $cardArchetypesEndPoint = 'https://db.ygoprodeck.com/api/v7/archetypes.php';
+    private string $randomCardEndpoint = 'https://db.ygoprodeck.com/api/v7/randomcard.php';
     private string $cardImgEndpoint;
     private string $smallImgEndpoint;
     private string $croppedImgEndpoint;
@@ -20,9 +21,10 @@ class YgoApiProxyService
     private string $smallImgLocation = 'images/smallImgs/';
     private string $croppedImgLocation = 'images/croppedImgs/';
 
-    private int $requestPerSecond = 18;
+    private int $requestsPerSecond = 18;
     private string $requestThisSecondKey = 'ApiRequestsThisSecond';
     private Carbon $limitResetTime;
+    private int $cacheDuration = 5; //in hours
 
     public function __construct()
     {
@@ -37,7 +39,7 @@ class YgoApiProxyService
             Cache::remember($this->requestThisSecondKey, now()->addSecond(), function () {
                 $this->limitResetTime = now()->addSecond();
                 return 0;
-            }) >= $this->requestPerSecond
+            }) >= $this->requestsPerSecond
         ) {
             time_sleep_until((float) $this->limitResetTime->format('U.u'));
             usleep(rand(0, 1000));
@@ -49,10 +51,23 @@ class YgoApiProxyService
      */
     public function getCardData(array $params): ?array
     {
+        $cacheKey = 'request_' . md5(http_build_query($params));
+        return Cache::remember($cacheKey, now()->addHours($this->cacheDuration), function () use ($params) {
+            $this->rateLimit();
+            try {
+                $request = Http::timeout(60)->get($this->cardDataEndpoint, $params);
+                return $request->json();
+            } catch (ConnectException $e) {
+                return null;
+            }
+        });
+    }
+
+    public function getRandomCard(): array|null
+    {
         $this->rateLimit();
         try {
-            $request = Http::timeout(60)->get($this->cardDataEndpoint, $params);
-            Cache::add('request_' . md5(http_build_query($params)), $request->body());
+            $request = Http::timeout(60)->get($this->randomCardEndpoint);
             return $request->json();
         } catch (ConnectException $e) {
             return null;
@@ -95,99 +110,217 @@ class YgoApiProxyService
      * @param string $cardType The type of card. Accepts 'monster', 'spell', 'trap', or 'all'.
      * @return string[] An array of race names.
      */
-    public function getRaces(string $cardType='all'):array{
-        $allRaces=
-        [
-        'Aqua',
-        'Beast',
-        'Beast-Warrior',
-        'Creator-God',
-        'Cyberse',
-        'Dinosaur',
-        'Divine-Beast',
-        'Dragon',
-        'Fairy',
-        'Fiend',
-        'Fish',
-        'Insect',
-        'Machine',
-        'Plant',
-        'Psychic',
-        'Pyro',
-        'Reptile',
-        'Rock',
-        'Sea Serpent',
-        'Spellcaster',
-        'Thunder',
-        'Warrior',
-        'Winged Beast',
-        'Wyrm',
-        'Zombie',
-        'Normal',
-        'Field',
-        'Equip',
-        'Quick-Play',
-        'Ritual',
-        'Counter'
+    public function getRaces(string $cardType = 'all'): array
+    {
+        $allRaces = [
+            'Aqua',
+            'Beast',
+            'Beast-Warrior',
+            'Creator-God',
+            'Cyberse',
+            'Dinosaur',
+            'Divine-Beast',
+            'Dragon',
+            'Fairy',
+            'Fiend',
+            'Fish',
+            'Insect',
+            'Machine',
+            'Plant',
+            'Psychic',
+            'Pyro',
+            'Reptile',
+            'Rock',
+            'Sea Serpent',
+            'Spellcaster',
+            'Thunder',
+            'Warrior',
+            'Winged Beast',
+            'Wyrm',
+            'Zombie',
+            'Normal',
+            'Field',
+            'Equip',
+            'Quick-Play',
+            'Ritual',
+            'Counter',
         ];
-        $monsterRaces=
-        [
-        'Aqua',
-        'Beast',
-        'Beast-Warrior',
-        'Creator-God',
-        'Cyberse',
-        'Dinosaur',
-        'Divine-Beast',
-        'Dragon',
-        'Fairy',
-        'Fiend',
-        'Fish',
-        'Insect',
-        'Machine',
-        'Plant',
-        'Psychic',
-        'Pyro',
-        'Reptile',
-        'Rock',
-        'Sea Serpent',
-        'Spellcaster',
-        'Thunder',
-        'Warrior',
-        'Winged Beast',
-        'Wyrm',
-        'Zombie'
+        $monsterRaces = [
+            'Aqua',
+            'Beast',
+            'Beast-Warrior',
+            'Creator-God',
+            'Cyberse',
+            'Dinosaur',
+            'Divine-Beast',
+            'Dragon',
+            'Fairy',
+            'Fiend',
+            'Fish',
+            'Insect',
+            'Machine',
+            'Plant',
+            'Psychic',
+            'Pyro',
+            'Reptile',
+            'Rock',
+            'Sea Serpent',
+            'Spellcaster',
+            'Thunder',
+            'Warrior',
+            'Winged Beast',
+            'Wyrm',
+            'Zombie',
         ];
-        $spellRaces=[
-        'Normal',
-        'Field',
-        'Equip',
-        'Continuous',
-        'Quick-Play',
-        'Ritual'
-        ];
-        $trapRaces=[
-        'Normal',
-        'Continuous',
-        'Counter'
-        ];
-        $ret=[];
-        switch ($cardType)
-        {
+        $spellRaces = ['Normal', 'Field', 'Equip', 'Continuous', 'Quick-Play', 'Ritual'];
+        $trapRaces = ['Normal', 'Continuous', 'Counter'];
+        $ret = [];
+        switch ($cardType) {
             case 'all':
             default:
-            $ret=$allRaces;
-            break;
+                $ret = $allRaces;
+                break;
             case 'monster':
-            $ret=$monsterRaces;
-            break;
+                $ret = $monsterRaces;
+                break;
             case 'spell':
-            $ret=$spellRaces;
-            break;
+                $ret = $spellRaces;
+                break;
             case 'trap':
-            $ret=$trapRaces;
-            break;
+                $ret = $trapRaces;
+                break;
         }
         return $ret;
+    }
+
+    /**
+     * @param string $cardType accepted values: 'all','main','extra','other'.
+     * @return array<int,string>
+     */
+    public function getTypes(string $cardType = 'all'): array
+    {
+        $all = [
+            'Effect Monster',
+            'Flip Effect Monster',
+            'Flip Tuner Effect Monster',
+            'Gemini Monster',
+            'Normal Monster',
+            'Normal Tuner Monster',
+            'Pendulum Effect Monster',
+            'Pendulum Effect Ritual Monster',
+            'Pendulum Flip Effect Monster',
+            'Pendulum Normal Monster',
+            'Pendulum Tuner Effect Monster',
+            'Ritual Effect Monster',
+            'Ritual Monster',
+            'Spell Card',
+            'Spirit Monster',
+            'Toon Monster',
+            'Trap Card',
+            'Tuner Monster',
+            'Union Effect Monster',
+            'Fusion Monster',
+            'Link Monster',
+            'Pendulum Effect Fusion Monster',
+            'Synchro Monster',
+            'Synchro Pendulum Effect Monster',
+            'Synchro Tuner Monster',
+            'XYZ Monster',
+            'XYZ Pendulum Effect Monster',
+            'Skill Card',
+            'Token',
+        ];
+        $main = [
+            'Effect Monster',
+            'Flip Effect Monster',
+            'Flip Tuner Effect Monster',
+            'Gemini Monster',
+            'Normal Monster',
+            'Normal Tuner Monster',
+            'Pendulum Effect Monster',
+            'Pendulum Effect Ritual Monster',
+            'Pendulum Flip Effect Monster',
+            'Pendulum Normal Monster',
+            'Pendulum Tuner Effect Monster',
+            'Ritual Effect Monster',
+            'Ritual Monster',
+            'Spell Card',
+            'Spirit Monster',
+            'Toon Monster',
+            'Trap Card',
+            'Tuner Monster',
+            'Union Effect Monster',
+        ];
+        $extra = [
+            'Fusion Monster',
+            'Link Monster',
+            'Pendulum Effect Fusion Monster',
+            'Synchro Monster',
+            'Synchro Pendulum Effect Monster',
+            'Synchro Tuner Monster',
+            'XYZ Monster',
+            'XYZ Pendulum Effect Monster',
+        ];
+        $other = ['Skill Card', 'Token'];
+
+        $ret = [];
+        switch ($cardType) {
+            case 'all':
+            default:
+                $ret = $all;
+                break;
+            case 'main':
+                $ret = $main;
+                break;
+            case 'extra':
+                $ret = $extra;
+                break;
+            case 'other':
+                $ret = $other;
+                break;
+        }
+
+        return $ret;
+    }
+
+    /**
+     * @return array<int,string>
+     */
+    public function getFrameTypes(): array
+    {
+        $frameTypes = [
+            'normal',
+            'effect',
+            'ritual',
+            'fusion',
+            'synchro',
+            'xyz',
+            'link',
+            'normal_pendulum',
+            'effect_pendulum',
+            'ritual_pendulum',
+            'fusion_pendulum',
+            'synchro_pendulum',
+            'xyz_pendulum',
+            'spell',
+            'trap',
+            'token',
+            'skill ',
+        ];
+        return $frameTypes;
+    }
+
+    public function getArchetypes()
+    {
+        $cacheKey = 'archetypes';
+        return Cache::remember($cacheKey, now()->addHours(24), function () {
+            $this->rateLimit();
+            try {
+                $request = Http::timeout(60)->get($this->cardDataEndpoint);
+                return $request->json();
+            } catch (ConnectException $e) {
+                return null;
+            }
+        });
     }
 }
