@@ -33,6 +33,54 @@ export interface User {
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;
+    phone: string;
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;
+
+export interface ApiCard {
+    id: number;
+    name: string;
+    type: string;
+    frameType: string;
+    desc: string;
+    atk?: number; 
+    def?: number; 
+    level?: number;
+    race: string;
+    attribute?: string;
+    archetype?: string;
+    linkval?: number;
+    linkmarkers?: string[];
+    ygoprodeck_url: string;
+    card_sets: CardSet[];
+    card_images: {
+        id: number;
+        image_url: string;
+        image_url_small: string;
+        image_url_cropped: string;
+    }[];
+    card_prices: {
+        cardmarket_price: string;
+        tcgplayer_price: string;
+        ebay_price: string;
+        amazon_price: string;
+        coolstuffinc_price: string;
+    }[];
+}
+
+export interface Meta {
+    current_rows: number;
+    total_rows: number;
+    rows_remaining: number;
+    total_pages: number;
+    pages_remaining: number;
+    next_page?: string;
+    next_page_offset?: number;
+}
+
+export interface YgoApiResponse {
+    data?: ApiCard[];
+    meta?: Meta;
+    error?: string; 
+}

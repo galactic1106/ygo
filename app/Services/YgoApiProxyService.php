@@ -6,6 +6,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class YgoApiProxyService
 {
@@ -24,7 +25,7 @@ class YgoApiProxyService
     private int $requestsPerSecond = 18;
     private string $requestThisSecondKey = 'ApiRequestsThisSecond';
     private Carbon $limitResetTime;
-    private int $cacheDuration = 5; //in hours
+    private int $cacheDuration = 48; //in hours
 
     public function __construct()
     {
@@ -46,6 +47,25 @@ class YgoApiProxyService
         }
         Cache::increment($this->requestThisSecondKey);
     }
+
+    public function makeRawRequest(string $url): ?array
+    {
+        if (!Str::contains($url, $this->cardDataEndpoint)) {
+            return null;
+        }
+
+        $cacheKey = 'request_' . md5($url);
+        return Cache::remember($cacheKey, now()->addHours($this->cacheDuration), function () use ($url) {
+            $this->rateLimit();
+            try {
+                $request = Http::timeout(60)->get($url);
+                return $request->json();
+            } catch (ConnectException $e) {
+                return null;
+            }
+        });
+    }
+
     /**
      * @param array<int,mixed> $params
      */
@@ -194,7 +214,7 @@ class YgoApiProxyService
     }
 
     /**
-     * @param string $cardType accepted values: 'all','main','extra','other'.
+     * @param string $cardType accepted values: 'all','main','main monsters','extra','other','spells','traps';
      * @return array<int,string>
      */
     public function getTypes(string $cardType = 'all'): array
@@ -244,13 +264,32 @@ class YgoApiProxyService
             'Pendulum Tuner Effect Monster',
             'Ritual Effect Monster',
             'Ritual Monster',
-            'Spell Card',
             'Spirit Monster',
             'Toon Monster',
-            'Trap Card',
             'Tuner Monster',
             'Union Effect Monster',
         ];
+        $mainMonsters = [
+            'Effect Monster',
+            'Flip Effect Monster',
+            'Flip Tuner Effect Monster',
+            'Gemini Monster',
+            'Normal Monster',
+            'Normal Tuner Monster',
+            'Pendulum Effect Monster',
+            'Pendulum Effect Ritual Monster',
+            'Pendulum Flip Effect Monster',
+            'Pendulum Normal Monster',
+            'Pendulum Tuner Effect Monster',
+            'Ritual Effect Monster',
+            'Ritual Monster',
+            'Spirit Monster',
+            'Toon Monster',
+            'Tuner Monster',
+            'Union Effect Monster',
+        ];
+        $spells = ['Spell Card'];
+        $traps = ['Trap Card'];
         $extra = [
             'Fusion Monster',
             'Link Monster',
@@ -265,10 +304,6 @@ class YgoApiProxyService
 
         $ret = [];
         switch ($cardType) {
-            case 'all':
-            default:
-                $ret = $all;
-                break;
             case 'main':
                 $ret = $main;
                 break;
@@ -277,6 +312,19 @@ class YgoApiProxyService
                 break;
             case 'other':
                 $ret = $other;
+                break;
+            case 'main monsters':
+                $ret = $mainMonsters;
+                break;
+            case 'spells':
+                $ret = $spells;
+                break;
+            case 'traps':
+                $ret = $traps;
+                break;
+            case 'all':
+            default:
+                $ret = $all;
                 break;
         }
 
@@ -310,28 +358,26 @@ class YgoApiProxyService
         return $frameTypes;
     }
 
-   
     /**
-         * @return array<int, string>
-         */
-        public function getArchetypes(): array
-        {
-            $cacheKey = 'archetypes_list';
-            return Cache::remember($cacheKey, now()->addHours(24), function () {
-                $this->rateLimit();
-                try {
-                    $response = Http::timeout(60)->get($this->cardArchetypesEndPoint);
-                    if ($response->failed() || !is_array($response->json())) {
-                        return []; // Return an empty array on failure or malformed response
-                    }
-                    // Pluck the 'archetype_name' from each object and return as a simple array
-                    return collect($response->json())->pluck('archetype_name')->all();
-                } catch (ConnectException $e) {
-                    return []; // Return an empty array on connection error
+     * @return array<int, string>
+     */
+    public function getArchetypes(): array
+    {
+        $cacheKey = 'archetypes_list';
+        return Cache::remember($cacheKey, now()->addHours(24), function () {
+            $this->rateLimit();
+            try {
+                $response = Http::timeout(60)->get($this->cardArchetypesEndPoint);
+                if ($response->failed() || !is_array($response->json())) {
+                    return []; // Return an empty array on failure or malformed response
                 }
-            });
-        }
-
+                // Pluck the 'archetype_name' from each object and return as a simple array
+                return collect($response->json())->pluck('archetype_name')->all();
+            } catch (ConnectException $e) {
+                return []; // Return an empty array on connection error
+            }
+        });
+    }
 
     public function getAttributes()
     {
@@ -344,23 +390,27 @@ class YgoApiProxyService
         $linkMarkers = ['top', 'bottom', 'left', 'right', 'bottom-left', 'bottom-right', 'top-left', 'top-right'];
         return $linkMarkers;
     }
-    
-    public function getBanLists(){
-        $banLists=['tcg', 'ocg', 'goat'];
+
+    public function getBanLists()
+    {
+        $banLists = ['tcg', 'ocg', 'goat'];
         return $banLists;
     }
-    public function getSortables(){
-        $sortables=['atk', 'def', 'name', 'type', 'level', 'id', 'new'];
+    public function getSortables()
+    {
+        $sortables = ['atk', 'def', 'name', 'type', 'level', 'id', 'new'];
         return $sortables;
     }
-    
-    public function getFormats(){
+
+    public function getFormats()
+    {
         $formats = ['tcg', 'goat', 'ocg goat', 'speed duel', 'master duel', 'rush duel', 'duel links'];
         return $formats;
     }
-    
-    public function getRegions(){
-        $regions=['tcg', 'ocg'];
+
+    public function getRegions()
+    {
+        $regions = ['tcg', 'ocg'];
         return $regions;
     }
 }
