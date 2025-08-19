@@ -113,17 +113,25 @@ class YgoApiProxyService
                 $imgUrl = $this->cardImgEndpoint . $id . '.jpg';
                 break;
         }
-
         if (Storage::disk('public')->exists($imgPath)) {
-            return Storage::disk('public')->url($imgPath);
+            return Storage::disk('public')->path($imgPath);
         }
         try {
+            if(Cache::remember($imgPath.'tried', now()->addDay(), function(){return false;}))
+            {
+                return null;
+            }
+            $this->rateLimit();
             $request = Http::timeout(30)->get($imgUrl);
+            if ($request->status() !== 200) {
+                Cache::set($imgPath.'tried',true, now()->addDay());
+                return null;
+            }
         } catch (ConnectException $e) {
             return null;
         }
         Storage::disk('public')->put($imgPath, $request->body());
-        return Storage::disk('public')->url($imgPath);
+        return Storage::disk('public')->path($imgPath);
     }
 
     /**
@@ -379,7 +387,7 @@ class YgoApiProxyService
         });
     }
 
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $attributes = ['dark', 'light', 'earth', 'water', 'fire', 'wind', 'divine'];
         return $attributes;
