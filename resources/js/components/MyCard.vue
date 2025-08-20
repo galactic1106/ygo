@@ -45,28 +45,20 @@ const cardBackgroundClass = computed(() => {
             return 'bg-[#EDEDED]'; // Token (use Synchro color)
         case 'skill':
             return 'bg-[#6DC3E6]'; // Skill Card (use Ritual color)
+        case 'normal_pendulum':
+            return 'bg-[linear-gradient(to_right,#F8D37A_0%,#1E9C4B_100%)]';
+        case 'effect_pendulum':
+            return 'bg-[linear-gradient(to_right,#D19B6A_0%,#1E9C4B_100%)]';
+        case 'fusion_pendulum':
+            return 'bg-[linear-gradient(to_right,#A97EDB_0%,#1E9C4B_100%)]';
+        case 'synchro_pendulum':
+            return 'bg-[linear-gradient(to_right,#EDEDED_0%,#1E9C4B_100%)]';
+        case 'xyz_pendulum':
+            return 'bg-[linear-gradient(to_right,#222222_0%,#1E9C4B_100%)]';
+        case 'ritual_pendulum':
+            return 'bg-[linear-gradient(to_right,#6DC3E6_0%,#1E9C4B_100%)]';
         default:
             return '';
-    }
-});
-
-// Computed property for inline style gradients for Pendulum types
-const pendulumGradientStyle = computed(() => {
-    switch (Props.card.frameType) {
-        case 'normal_pendulum':
-            return { background: 'linear-gradient(to right, #F8D37A 0%, #1E9C4B 100%)' };
-        case 'effect_pendulum':
-            return { background: 'linear-gradient(to right, #D19B6A 0%, #1E9C4B 100%)' };
-        case 'fusion_pendulum':
-            return { background: 'linear-gradient(to right, #A97EDB 0%, #1E9C4B 100%)'};
-        case 'synchro_pendulum':
-            return { background: 'linear-gradient(to right, #EDEDED 0%, #1E9C4B 100%)'};
-        case 'xyz_pendulum':
-            return { background: 'linear-gradient(to right, #222222 0%, #1E9C4B 100%)'};
-        case 'ritual_pendulum':
-            return { background: 'linear-gradient(to right, #6DC3E6 0%, #1E9C4B 100%)'};
-        default:
-            return {};
     }
 });
 </script>
@@ -89,10 +81,10 @@ const pendulumGradientStyle = computed(() => {
                 <span v-if="card.level" class="grow-2 text-start">
                     <template v-if="card.frameType === 'xyz'">Rank</template>
                     <template v-else>Level</template>
-                    :{{ card.level }}
+                    : {{ card.level }}
                 </span>
                 <span v-if="card.linkval && card.linkval > 0" class="grow-2 text-start"> Linkval: {{ card.linkval }} </span>
-                <span v-if="card.archetype">Arc: {{ card.archetype }}</span>
+                <span v-if="card.archetype">Arc: {{ card.archetype }}</span> <span v-else class="min-h-4"></span>
                 <span v-if="card.attribute" class="grow-2 text-end">{{ card.attribute }}</span>
             </CardDescription>
         </CardHeader>
@@ -119,13 +111,7 @@ const pendulumGradientStyle = computed(() => {
                 <template v-if="card.race">{{ card.race + ' ' }} </template>
                 <template v-if="card.type">{{ card.type }}</template>
             </span>
-            <Separator
-                orientation="horizontal"
-                class="my-1"
-                :class="Props.card.frameType.includes('pendulum') ? '' : cardBackgroundClass"
-                style="height:4px"
-                :style="pendulumGradientStyle"
-            />
+            <Separator orientation="horizontal" class="my-1" :class="cardBackgroundClass" style="height: 4px" />
             <span class="flex w-full">
                 <div v-if="card.atk" class="grow-2 text-start">Atk: {{ card.atk }}</div>
                 <div v-if="card.def" class="grow-1 text-end">Def: {{ card.def }}</div>
