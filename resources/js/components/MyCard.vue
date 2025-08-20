@@ -3,51 +3,72 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Separator } from '@/components/ui/separator';
 import { ApiCard } from '@/types';
+import { ArrowDown, ArrowDownLeft, ArrowDownRight, ArrowLeft, ArrowRight, ArrowUp, ArrowUpLeft, ArrowUpRight } from 'lucide-vue-next';
+import { computed } from 'vue';
 
 interface Props {
     card: ApiCard;
 }
 const Props = defineProps<Props>();
-const imgUrl = 'apiUrl';
 
-function printMarkers(markers: string[]) {
-    let res = '';
-    markers.forEach((marker: string) => {
-        switch (marker) {
-            case 'Top-Left':
-                res += '';
-                break;
-            case 'Top':
-                res += '';
-                break;
-            case 'Top-Right':
-                res += '';
-                break;
-            case 'Right':
-                res += '';
-                break;
-            case 'Bottom-Right':
-                res += '';
-                break;
-            case 'Bottom':
-                res += `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
-                  <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .75.75v10.638l3.96-4.158a.75.75 0 1 1 1.08 1.04l-5.25 5.5a.75.75 0 0 1-1.08 0l-5.25-5.5a.75.75 0 1 1 1.08-1.04l3.96 4.158V3.75A.75.75 0 0 1 10 3Z" clip-rule="evenodd" />
-                      </svg>`;
-                break;
-            case 'Bottom-Left':
-                res +=  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
-                  <path fill-rule="evenodd" d="M14.78 5.22a.75.75 0 0 0-1.06 0L6.5 12.44V6.75a.75.75 0 0 0-1.5 0v7.5c0 .414.336.75.75.75h7.5a.75.75 0 0 0 0-1.5H7.56l7.22-7.22a.75.75 0 0 0 0-1.06Z" clip-rule="evenodd" />
-                </svg>`;
-                break;
-            case 'Left':
-                res += '';
-                break;
-            default:
-                break;
-        }
-    });
-    return res;
-}
+const hasTopLeft = computed(() => Props.card.linkmarkers?.includes('Top-Left'));
+const hasTop = computed(() => Props.card.linkmarkers?.includes('Top'));
+const hasTopRight = computed(() => Props.card.linkmarkers?.includes('Top-Right'));
+const hasLeft = computed(() => Props.card.linkmarkers?.includes('Left'));
+const hasRight = computed(() => Props.card.linkmarkers?.includes('Right'));
+const hasBottomLeft = computed(() => Props.card.linkmarkers?.includes('Bottom-Left'));
+const hasBottom = computed(() => Props.card.linkmarkers?.includes('Bottom'));
+const hasBottomRight = computed(() => Props.card.linkmarkers?.includes('Bottom-Right'));
+
+// Computed property for background color classes (solid colors)
+const cardBackgroundClass = computed(() => {
+    switch (Props.card.frameType) {
+        case 'normal':
+            return 'bg-[#F8D37A]'; // Normal Monster
+        case 'effect':
+            return 'bg-[#D19B6A]'; // Effect Monster
+        case 'ritual':
+            return 'bg-[#6DC3E6]'; // Ritual Monster
+        case 'fusion':
+            return 'bg-[#A97EDB]'; // Fusion Monster
+        case 'synchro':
+            return 'bg-[#EDEDED]'; // Synchro Monster
+        case 'xyz':
+            return 'bg-[#222222]'; // Xyz Monster
+        case 'link':
+            return 'bg-[#3A6DB1]'; // Link Monster
+        case 'spell':
+            return 'bg-[#1E9C4B]'; // Spell Card
+        case 'trap':
+            return 'bg-[#B85A8A]'; // Trap Card
+        case 'token':
+            return 'bg-[#EDEDED]'; // Token (use Synchro color)
+        case 'skill':
+            return 'bg-[#6DC3E6]'; // Skill Card (use Ritual color)
+        default:
+            return '';
+    }
+});
+
+// Computed property for inline style gradients for Pendulum types
+const pendulumGradientStyle = computed(() => {
+    switch (Props.card.frameType) {
+        case 'normal_pendulum':
+            return { background: 'linear-gradient(to right, #F8D37A 0%, #1E9C4B 100%)' };
+        case 'effect_pendulum':
+            return { background: 'linear-gradient(to right, #D19B6A 0%, #1E9C4B 100%)' };
+        case 'fusion_pendulum':
+            return { background: 'linear-gradient(to right, #A97EDB 0%, #1E9C4B 100%)'};
+        case 'synchro_pendulum':
+            return { background: 'linear-gradient(to right, #EDEDED 0%, #1E9C4B 100%)'};
+        case 'xyz_pendulum':
+            return { background: 'linear-gradient(to right, #222222 0%, #1E9C4B 100%)'};
+        case 'ritual_pendulum':
+            return { background: 'linear-gradient(to right, #6DC3E6 0%, #1E9C4B 100%)'};
+        default:
+            return {};
+    }
+});
 </script>
 
 <template>
@@ -55,7 +76,7 @@ function printMarkers(markers: string[]) {
         <CardHeader>
             <CardTitle>
                 <HoverCard>
-                    <HoverCardTrigger>
+                    <HoverCardTrigger class="overflow-ellipsis whitespace-nowrap">
                         {{ card.name }}
                     </HoverCardTrigger>
                     <HoverCardContent class="w-fit max-w-[50vw]">
@@ -70,31 +91,45 @@ function printMarkers(markers: string[]) {
                     <template v-else>Level</template>
                     :{{ card.level }}
                 </span>
-                <span v-else> Linkval: {{ card.linkval }} </span>
+                <span v-if="card.linkval && card.linkval > 0" class="grow-2 text-start"> Linkval: {{ card.linkval }} </span>
                 <span v-if="card.archetype">Arc: {{ card.archetype }}</span>
                 <span v-if="card.attribute" class="grow-2 text-end">{{ card.attribute }}</span>
             </CardDescription>
-
-            <template v-if="card.linkmarkers" >
-                <CardDescription class="flex w-full items-center justify-center">
-                    <Separator orientation="horizontal" class="mx-1 block h-4" />
-                </CardDescription>
-                <CardDescription class="flex w-full items-center justify-center"> {{ printMarkers(card.linkmarkers)}} </CardDescription>
-            </template>
         </CardHeader>
-        <CardContent><img :src="'/yap/img/cropped/' + card.id" :alt="'/yap/img/cropped/' + card.id" /></CardContent>
+
+        <CardContent class="relative mx-6 px-0">
+            <template v-if="card.linkmarkers">
+                <!-- Absolutely positioned arrows -->
+                <ArrowUpLeft v-if="hasTopLeft" class="absolute top-[-5%] left-[-5%] stroke-3 text-red-500" />
+                <ArrowUp v-if="hasTop" class="absolute top-[-5%] left-1/2 -translate-x-1/2 stroke-3 text-red-500" />
+                <ArrowUpRight v-if="hasTopRight" class="absolute top-[-5%] right-[-5%] stroke-3 text-red-500" />
+
+                <ArrowLeft v-if="hasLeft" class="absolute top-1/2 left-[-5%] -translate-y-1/2 stroke-3 text-red-500" />
+                <ArrowRight v-if="hasRight" class="absolute top-1/2 right-[-5%] -translate-y-1/2 stroke-3 text-red-500" />
+
+                <ArrowDownLeft v-if="hasBottomLeft" class="absolute bottom-[-5%] left-[-5%] stroke-3 text-red-500" />
+                <ArrowDown v-if="hasBottom" class="absolute bottom-[-5%] left-1/2 -translate-x-1/2 stroke-3 text-red-500" />
+                <ArrowDownRight v-if="hasBottomRight" class="absolute right-[-5%] bottom-[-5%] stroke-3 text-red-500" />
+            </template>
+            <img :src="'/yap/img/cropped/' + card.id" alt="Image unavailable" class="relative z-10 rounded-md" />
+        </CardContent>
+
         <CardFooter class="flex-col">
-            <span>
+            <span class="flex w-full">
                 <template v-if="card.race">{{ card.race + ' ' }} </template>
                 <template v-if="card.type">{{ card.type }}</template>
             </span>
-            <Separator orientation="horizontal" class="my-2" />
-            <div class="flex w-full">
+            <Separator
+                orientation="horizontal"
+                class="my-1"
+                :class="Props.card.frameType.includes('pendulum') ? '' : cardBackgroundClass"
+                style="height:4px"
+                :style="pendulumGradientStyle"
+            />
+            <span class="flex w-full">
                 <div v-if="card.atk" class="grow-2 text-start">Atk: {{ card.atk }}</div>
                 <div v-if="card.def" class="grow-1 text-end">Def: {{ card.def }}</div>
-            </div>
-            <!--
-            -->
+            </span>
         </CardFooter>
     </Card>
 </template>

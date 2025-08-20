@@ -44,11 +44,11 @@ const breadcrumbs: BreadcrumbItemType[] = [
         <div class="p-5">
             <PageTitle :title="title" class="mb-5" />
             <Tabs defaultValue="monster">
-                <TabsList class="p-1">
-                    <TabsTrigger value="monster" ><h1 class="mb-1 rounded-xl border bg-amber-700 p-2 text-2xl font-bold">Latest Monsters</h1></TabsTrigger>
-                    <TabsTrigger value="spells" ><h1 class="mb-1 rounded-xl border bg-emerald-700 p-2 text-2xl font-bold">Latest Spells</h1></TabsTrigger>
-                    <TabsTrigger value="traps" ><h1 class="mb-1 rounded-xl border bg-fuchsia-800 p-2 text-2xl font-bold">Latest Traps</h1></TabsTrigger>
-                    <TabsTrigger value="extras" ><h1 class="mb-1 rounded-xl border bg-blue-900 p-2 text-2xl font-bold">Latest Extras</h1></TabsTrigger>
+                <TabsList class="grid w-[70%] grid-cols-4 gap-3 h-fit p-2">
+                    <TabsTrigger value="monster" class="bg-[#D19B6A] text-xl">Latest Monsters</TabsTrigger>
+                    <TabsTrigger value="spells" class="bg-[#1E9C4B] text-xl">Latest Spells</TabsTrigger>
+                    <TabsTrigger value="traps" class="bg-[#B85A8A] text-xl">Latest Traps</TabsTrigger>
+                    <TabsTrigger value="extras" class="bg-[#3A6DB1] text-xl">Latest Extras</TabsTrigger>
                 </TabsList>
                 <TabsContent value="monster">
                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -89,7 +89,6 @@ const breadcrumbs: BreadcrumbItemType[] = [
                     </div>
                 </TabsContent>
             </Tabs>
-            
         </div>
     </AppLayout>
 </template>
