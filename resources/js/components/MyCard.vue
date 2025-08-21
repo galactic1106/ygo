@@ -84,7 +84,7 @@ const cardBackgroundClass = computed(() => {
                     : {{ card.level }}
                 </span>
                 <span v-if="card.linkval && card.linkval > 0" class="grow-2 text-start"> Linkval: {{ card.linkval }} </span>
-                <span v-if="card.archetype">Arc: {{ card.archetype }}</span> <span v-else class="min-h-4"></span>
+                <span v-if="card.archetype">Arc: {{ card.archetype }}</span> <span v-else style="min-height: 1rem"></span>
                 <span v-if="card.attribute" class="grow-2 text-end">{{ card.attribute }}</span>
             </CardDescription>
         </CardHeader>
@@ -111,7 +111,7 @@ const cardBackgroundClass = computed(() => {
                 <template v-if="card.race">{{ card.race + ' ' }} </template>
                 <template v-if="card.type">{{ card.type }}</template>
             </span>
-            <Separator orientation="horizontal" class="my-1" :class="cardBackgroundClass" style="height: 4px" />
+            <Separator orientation="horizontal" class="my-1 rounded-2xl" :class="cardBackgroundClass" style="height: 5px" />
             <span class="flex w-full">
                 <div v-if="card.atk" class="grow-2 text-start">Atk: {{ card.atk }}</div>
                 <div v-if="card.def" class="grow-1 text-end">Def: {{ card.def }}</div>
