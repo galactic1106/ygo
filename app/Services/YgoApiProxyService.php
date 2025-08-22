@@ -72,6 +72,12 @@ class YgoApiProxyService
     public function getCardData(array $params): ?array
     {
         $cacheKey = 'request_' . md5(http_build_query($params));
+        if (!$params['num'] || $params['num'] > 100) {
+            $params['num'] = 20;
+            if (!$params['offset']) {
+                $params['offset'] = 0;
+            }
+        }
         return Cache::remember($cacheKey, now()->addHours($this->cacheDuration), function () use ($params) {
             $this->rateLimit();
             try {
@@ -117,14 +123,17 @@ class YgoApiProxyService
             return Storage::disk('public')->path($imgPath);
         }
         try {
-            if(Cache::remember($imgPath.'tried', now()->addDay(), function(){return false;}))
-            {
+            if (
+                Cache::remember($imgPath . 'tried', now()->addDay(), function () {
+                    return false;
+                })
+            ) {
                 return null;
             }
             $this->rateLimit();
             $request = Http::timeout(30)->get($imgUrl);
             if ($request->status() !== 200) {
-                Cache::set($imgPath.'tried',true, now()->addDay());
+                Cache::set($imgPath . 'tried', true, now()->addDay());
                 return null;
             }
         } catch (ConnectException $e) {

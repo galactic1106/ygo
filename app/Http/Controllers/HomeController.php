@@ -9,16 +9,19 @@ use Inertia\Inertia;
 class HomeController extends Controller
 {
     private YgoApiProxyService $yaps;
-    
+
     public function __construct(YgoApiProxyService $yaps)
     {
         $this->yaps=$yaps;
     }
-    
+
     /**
      * Handle the incoming request.
+     *
+     * @param Request $request
+     * @return \Inertia\Response
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): \Inertia\Response
     {
         $latestMonsters = $this->yaps->getCardData([
             'type'=> implode(',',$this->yaps->getTypes('main monsters')),
@@ -28,28 +31,28 @@ class HomeController extends Controller
             'offset'=>0
         ]);
         //dd($this->yaps->getTypes('main monsters'),$latestMonsters);
-        
+
         $latestSpells=$this->yaps->getCardData([
             'type'=>'spell card',
             'sort'=> 'new',
             'num'=> 20,
             'offset'=>0
         ]);
-        
+
         $latestTraps=$this->yaps->getCardData([
             'type'=>'trap card',
             'sort'=> 'new',
             'num'=> 20,
             'offset'=>0
         ]);
-        
+
         $latestExtra=$this->yaps->getCardData([
             'type'=>implode(',',$this->yaps->getTypes('extra')),
             'sort'=> 'new',
             'num'=> 20,
             'offset'=>0
         ]);
-        
+
         return Inertia::render('Home',[
             'latestMonsters'=>$latestMonsters ?? [],
             'latestSpells'=> $latestSpells ?? [],

@@ -103,7 +103,9 @@ const cardBackgroundClass = computed(() => {
                 <ArrowDown v-if="hasBottom" class="absolute bottom-[-5%] left-1/2 -translate-x-1/2 stroke-3 text-red-500" />
                 <ArrowDownRight v-if="hasBottomRight" class="absolute right-[-5%] bottom-[-5%] stroke-3 text-red-500" />
             </template>
-            <img :src="'/yap/img/cropped/' + card.id" alt="Image unavailable" class="relative z-10 rounded-md" />
+            <template v-if="card.id">
+                <img :src="'/yap/img/cropped/' + card.id" alt="Image unavailable" class="relative z-10 rounded-md" />
+            </template>
         </CardContent>
 
         <CardFooter class="flex-col">
