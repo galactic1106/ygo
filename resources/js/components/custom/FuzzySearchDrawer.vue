@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import MyCard from '@/components/MyCard.vue';
+import MyCard from '@/components/custom/MyCard.vue';
 import {
     Drawer,
     // DrawerClose,

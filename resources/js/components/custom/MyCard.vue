@@ -5,6 +5,7 @@ import { Separator } from '@/components/ui/separator';
 import { ApiCard } from '@/types';
 import { ArrowDown, ArrowDownLeft, ArrowDownRight, ArrowLeft, ArrowRight, ArrowUp, ArrowUpLeft, ArrowUpRight } from 'lucide-vue-next';
 import { computed } from 'vue';
+import { getCardBackground } from '@/composables/getCardBackground';
 
 interface Props {
     card: ApiCard;
@@ -19,53 +20,12 @@ const hasRight = computed(() => Props.card.linkmarkers?.includes('Right'));
 const hasBottomLeft = computed(() => Props.card.linkmarkers?.includes('Bottom-Left'));
 const hasBottom = computed(() => Props.card.linkmarkers?.includes('Bottom'));
 const hasBottomRight = computed(() => Props.card.linkmarkers?.includes('Bottom-Right'));
-
-// Computed property for background color classes (solid colors)
-const cardBackgroundClass = computed(() => {
-    switch (Props.card.frameType) {
-        case 'normal':
-            return 'bg-[#F8D37A]'; // Normal Monster
-        case 'effect':
-            return 'bg-[#D19B6A]'; // Effect Monster
-        case 'ritual':
-            return 'bg-[#6DC3E6]'; // Ritual Monster
-        case 'fusion':
-            return 'bg-[#A97EDB]'; // Fusion Monster
-        case 'synchro':
-            return 'bg-[#EDEDED]'; // Synchro Monster
-        case 'xyz':
-            return 'bg-[#222222]'; // Xyz Monster
-        case 'link':
-            return 'bg-[#3A6DB1]'; // Link Monster
-        case 'spell':
-            return 'bg-[#1E9C4B]'; // Spell Card
-        case 'trap':
-            return 'bg-[#B85A8A]'; // Trap Card
-        case 'token':
-            return 'bg-[#EDEDED]'; // Token (use Synchro color)
-        case 'skill':
-            return 'bg-[#6DC3E6]'; // Skill Card (use Ritual color)
-        case 'normal_pendulum':
-            return 'bg-[linear-gradient(to_right,#F8D37A_0%,#1E9C4B_100%)]';
-        case 'effect_pendulum':
-            return 'bg-[linear-gradient(to_right,#D19B6A_0%,#1E9C4B_100%)]';
-        case 'fusion_pendulum':
-            return 'bg-[linear-gradient(to_right,#A97EDB_0%,#1E9C4B_100%)]';
-        case 'synchro_pendulum':
-            return 'bg-[linear-gradient(to_right,#EDEDED_0%,#1E9C4B_100%)]';
-        case 'xyz_pendulum':
-            return 'bg-[linear-gradient(to_right,#222222_0%,#1E9C4B_100%)]';
-        case 'ritual_pendulum':
-            return 'bg-[linear-gradient(to_right,#6DC3E6_0%,#1E9C4B_100%)]';
-        default:
-            return '';
-    }
-});
+const cardBackgroundClass = computed(() => getCardBackground(Props.card.frameType));
 </script>
 
 <template>
-    <div class="!aspect-[2.25/3.25]">
-        <Card class="flex h-full w-full flex-col">
+    <div class="">
+        <Card class="flex flex-col">
             <CardHeader>
                 <CardTitle>
                     <HoverCard>

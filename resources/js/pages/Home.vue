@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import MyCard from '@/components/MyCard.vue';
+import MyCard from '@/components/custom/MyCard.vue';
 import PageTitle from '@/components/PageTitle.vue';
 import { Alert, AlertTitle } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
