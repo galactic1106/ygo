@@ -10,7 +10,7 @@ import {
     DrawerTrigger,
 } from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { ApiCard } from '@/types';
 import axios from 'axios';
 import { Search } from 'lucide-vue-next';
@@ -56,7 +56,7 @@ function handleDebounce(): void {
 <template>
     <Drawer>
         <DrawerTrigger><Search class="size-4" /></DrawerTrigger>
-        <DrawerContent class="h-[70%]">
+        <DrawerContent class="h-7/10">
             <DrawerHeader class="h-1/4">
                 <div class="mb-2 flex w-full justify-center">
                     <DrawerTitle class="text-xl">Fuzzy search cards!</DrawerTitle>
@@ -66,17 +66,16 @@ function handleDebounce(): void {
                     <span class="absolute inset-y-0 start-0 flex items-center justify-center px-2"><Search class="size-4"></Search></span>
                 </div>
             </DrawerHeader>
-            <div class="mb-5 flex h-3/4 flex-row justify-center">
-                <div class="flex w-full flex-row space-x-4 p-4">
-                    <ScrollArea class="w-[95%] rounded-md border whitespace-nowrap">
+
+            <div class="mb-3 flex h-3/4 flex-row justify-center">
+                <ScrollArea class="w-[95%] rounded-xl border whitespace-nowrap">
+                    <div class="flex flex-row gap-4 p-4">
                         <template v-for="card in cards" :key="card.id">
-                            <div class="w-1/5">
-                                <MyCard :card="card" />
-                            </div>
+                            <MyCard :card="card" class="!w-72 flex-shrink-0" />
                         </template>
-                        <ScrollBar orientation="horizontal" />
-                    </ScrollArea>
-                </div>
+                    </div>
+                    <ScrollBar orientation="horizontal" />
+                </ScrollArea>
             </div>
         </DrawerContent>
     </Drawer>

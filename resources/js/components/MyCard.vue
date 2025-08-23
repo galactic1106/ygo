@@ -64,60 +64,67 @@ const cardBackgroundClass = computed(() => {
 </script>
 
 <template>
-    <Card>
-        <CardHeader>
-            <CardTitle>
-                <HoverCard>
-                    <HoverCardTrigger class="overflow-ellipsis whitespace-nowrap">
-                        {{ card.name }}
-                    </HoverCardTrigger>
-                    <HoverCardContent class="w-fit max-w-[50vw]">
-                        {{ card.desc }}
-                    </HoverCardContent>
-                </HoverCard>
-            </CardTitle>
+    <div class="!aspect-[2.25/3.25]">
+        <Card class="flex h-full w-full flex-col">
+            <CardHeader>
+                <CardTitle>
+                    <HoverCard>
+                        <HoverCardTrigger class="overflow-ellipsis whitespace-nowrap">
+                            {{ card.name }}
+                        </HoverCardTrigger>
+                        <HoverCardContent class="w-fit max-w-[50vw]">
+                            {{ card.desc }}
+                        </HoverCardContent>
+                    </HoverCard>
+                </CardTitle>
 
-            <CardDescription class="flex w-full items-center justify-center">
-                <span v-if="card.level" class="grow-2 text-start">
-                    <template v-if="card.frameType === 'xyz'">Rank</template>
-                    <template v-else>Level</template>
-                    : {{ card.level }}
+                <CardDescription class="flex w-full items-center justify-center">
+                    <span v-if="card.level" class="grow-2 text-start">
+                        <template v-if="card.frameType === 'xyz'">Rank</template>
+                        <template v-else>Level</template>
+                        : {{ card.level }}
+                    </span>
+                    <span v-if="card.linkval && card.linkval > 0" class="grow-2 text-start"> Linkval: {{ card.linkval }} </span>
+                    <span v-if="card.archetype">Arc: {{ card.archetype }}</span> <span v-else style="min-height: 1rem"></span>
+                    <span v-if="card.attribute" class="grow-2 text-end">{{ card.attribute }}</span>
+                </CardDescription>
+            </CardHeader>
+
+            <CardContent class="relative mx-6 flex flex-1 items-center justify-center px-0 h-[75%]">
+                <template v-if="card.linkmarkers">
+                    <!-- Absolutely positioned arrows -->
+                    <ArrowUpLeft v-if="hasTopLeft" class="absolute top-[-5%] left-[-5%] stroke-3 text-red-500" />
+                    <ArrowUp v-if="hasTop" class="absolute top-[-5%] left-1/2 -translate-x-1/2 stroke-3 text-red-500" />
+                    <ArrowUpRight v-if="hasTopRight" class="absolute top-[-5%] right-[-5%] stroke-3 text-red-500" />
+
+                    <ArrowLeft v-if="hasLeft" class="absolute top-1/2 left-[-5%] -translate-y-1/2 stroke-3 text-red-500" />
+                    <ArrowRight v-if="hasRight" class="absolute top-1/2 right-[-5%] -translate-y-1/2 stroke-3 text-red-500" />
+
+                    <ArrowDownLeft v-if="hasBottomLeft" class="absolute bottom-[-5%] left-[-5%] stroke-3 text-red-500" />
+                    <ArrowDown v-if="hasBottom" class="absolute bottom-[-5%] left-1/2 -translate-x-1/2 stroke-3 text-red-500" />
+                    <ArrowDownRight v-if="hasBottomRight" class="absolute right-[-5%] bottom-[-5%] stroke-3 text-red-500" />
+                </template>
+                <template v-if="card.id">
+                    <img
+                        :src="'/yap/img/cropped/' + card.id"
+                        alt="Image unavailable"
+                        class="relative z-10 aspect-square h-full w-auto rounded-md object-cover object-[center_top]"
+                    />
+                </template>
+            </CardContent>
+
+            <CardFooter class="flex-col">
+                <span class="flex w-full">
+                    <template v-if="card.race">{{ card.race + ' ' }} </template>
+                    <template v-if="card.type">{{ card.type }}</template>
                 </span>
-                <span v-if="card.linkval && card.linkval > 0" class="grow-2 text-start"> Linkval: {{ card.linkval }} </span>
-                <span v-if="card.archetype">Arc: {{ card.archetype }}</span> <span v-else style="min-height: 1rem"></span>
-                <span v-if="card.attribute" class="grow-2 text-end">{{ card.attribute }}</span>
-            </CardDescription>
-        </CardHeader>
-
-        <CardContent class="relative mx-6 px-0">
-            <template v-if="card.linkmarkers">
-                <!-- Absolutely positioned arrows -->
-                <ArrowUpLeft v-if="hasTopLeft" class="absolute top-[-5%] left-[-5%] stroke-3 text-red-500" />
-                <ArrowUp v-if="hasTop" class="absolute top-[-5%] left-1/2 -translate-x-1/2 stroke-3 text-red-500" />
-                <ArrowUpRight v-if="hasTopRight" class="absolute top-[-5%] right-[-5%] stroke-3 text-red-500" />
-
-                <ArrowLeft v-if="hasLeft" class="absolute top-1/2 left-[-5%] -translate-y-1/2 stroke-3 text-red-500" />
-                <ArrowRight v-if="hasRight" class="absolute top-1/2 right-[-5%] -translate-y-1/2 stroke-3 text-red-500" />
-
-                <ArrowDownLeft v-if="hasBottomLeft" class="absolute bottom-[-5%] left-[-5%] stroke-3 text-red-500" />
-                <ArrowDown v-if="hasBottom" class="absolute bottom-[-5%] left-1/2 -translate-x-1/2 stroke-3 text-red-500" />
-                <ArrowDownRight v-if="hasBottomRight" class="absolute right-[-5%] bottom-[-5%] stroke-3 text-red-500" />
-            </template>
-            <template v-if="card.id">
-                <img :src="'/yap/img/cropped/' + card.id" alt="Image unavailable" class="relative z-10 rounded-md" />
-            </template>
-        </CardContent>
-
-        <CardFooter class="flex-col">
-            <span class="flex w-full">
-                <template v-if="card.race">{{ card.race + ' ' }} </template>
-                <template v-if="card.type">{{ card.type }}</template>
-            </span>
-            <Separator orientation="horizontal" class="my-1 rounded-2xl" :class="cardBackgroundClass" style="height: 5px" />
-            <span class="flex w-full">
-                <div v-if="card.atk" class="grow-2 text-start">Atk: {{ card.atk }}</div>
-                <div v-if="card.def" class="grow-1 text-end">Def: {{ card.def }}</div>
-            </span>
-        </CardFooter>
-    </Card>
+                <Separator orientation="horizontal" class="my-1 rounded-2xl" :class="cardBackgroundClass" style="height: 5px" />
+                <span class="flex w-full">
+                    <div v-if="card.atk" class="grow-2 text-start">Atk: {{ card.atk }}</div>
+                    <div v-if="card.def" class="grow-1 text-end">Def: {{ card.def }}</div>
+                    <div v-if="!card.atk && !card.def" class="min-h-4"></div>
+                </span>
+            </CardFooter>
+        </Card>
+    </div>
 </template>

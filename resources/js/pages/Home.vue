@@ -43,12 +43,13 @@ const breadcrumbs: BreadcrumbItemType[] = [
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="p-5">
             <PageTitle :title="title" class="mb-5" />
-            <Tabs defaultValue="monster">
-                <TabsList class="grid w-[70%] grid-cols-4 gap-3 h-fit p-2">
-                    <TabsTrigger value="monster" class="bg-[#D19B6A] text-xl">Latest Monsters</TabsTrigger>
-                    <TabsTrigger value="spells" class="bg-[#1E9C4B] text-xl">Latest Spells</TabsTrigger>
-                    <TabsTrigger value="traps" class="bg-[#B85A8A] text-xl">Latest Traps</TabsTrigger>
-                    <TabsTrigger value="extras" class="bg-[#3A6DB1] text-xl">Latest Extras</TabsTrigger>
+            <Tabs defaultValue="monster" orientation="vertical">
+                <TabsList class="h-fit w-full gap-3 p-2 grid grid-cols-1 sm:grid-cols-4 md:w-[70%]">
+                    <TabsTrigger value="" class="text-2xl font-bold px-0 sm:col-span-4  !opacity-100 !text-white" disabled>Latest: </TabsTrigger>
+                    <TabsTrigger value="monster" class="bg-[#D19B6A] text-xl">Monsters</TabsTrigger>
+                    <TabsTrigger value="spells" class="bg-[#1E9C4B] text-xl">Spells</TabsTrigger>
+                    <TabsTrigger value="traps" class="bg-[#B85A8A] text-xl">Traps</TabsTrigger>
+                    <TabsTrigger value="extras" class="bg-[#3A6DB1] text-xl">Extras</TabsTrigger>
                 </TabsList>
                 <TabsContent value="monster">
                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
