@@ -29,10 +29,14 @@ const cardBackgroundClass = computed(() => getCardBackground(Props.card.frameTyp
             <CardHeader>
                 <CardTitle>
                     <HoverCard>
-                        <HoverCardTrigger class="overflow-ellipsis whitespace-nowrap">
-                            {{ card.name }}
-                        </HoverCardTrigger>
+                        <p class="overflow-hidden text-nowrap text-ellipsis">
+                            <HoverCardTrigger>
+                                {{ card.name }}
+                            </HoverCardTrigger>
+                        </p>
                         <HoverCardContent class="w-fit max-w-[50vw]">
+                            {{ card.name }}
+                            <br />
                             {{ card.desc }}
                         </HoverCardContent>
                     </HoverCard>
@@ -44,7 +48,7 @@ const cardBackgroundClass = computed(() => getCardBackground(Props.card.frameTyp
                         <template v-else>Level</template>
                         : {{ card.level }}
                     </span>
-                    <span v-if="card.linkval && card.linkval > 0" class="grow-2 text-start"> Linkval: {{ card.linkval }} </span>
+                    <span v-elif="card.linkval && card.linkval > 0" class="grow-2 text-start"> Linkval: {{ card.linkval }} </span>
                     <span v-if="card.archetype">Arc: {{ card.archetype }}</span> <span v-else style="min-height: 1rem"></span>
                     <span v-if="card.attribute" class="grow-2 text-end">{{ card.attribute }}</span>
                 </CardDescription>

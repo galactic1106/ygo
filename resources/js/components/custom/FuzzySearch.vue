@@ -50,7 +50,7 @@ function handleDebounce(): void {
 <template>
     <Dialog>
         <DialogTrigger><Search class="size-4" /></DialogTrigger>
-        <DialogContent class="flex h-[80vh] max-h-[900px] flex-col">
+        <DialogContent class="flex h-[90vh] max-h-[900px] flex-col p-3">
             <DialogHeader class="flex-shrink-0 space-y-4">
                 <DialogTitle class="flex w-full justify-center text-xl">Fuzzy search cards!</DialogTitle>
                 <div class="relative mx-auto flex w-full justify-center">
@@ -59,8 +59,8 @@ function handleDebounce(): void {
                 </div>
             </DialogHeader>
 
-            <div class="min-h-0 flex-1 py-4">
-                <ScrollArea class="h-full">
+            <div class="min-h-0 flex-1 py-3">
+                <ScrollArea class="h-full pe-1">
                     <div class="space-y-2">
                         <div v-for="card in cards" :key="card.id" class="px-2">
                             <CardListElement :card="card" class="h-32 w-full" />
@@ -71,7 +71,7 @@ function handleDebounce(): void {
                 </ScrollArea>
             </div>
 
-            <DialogFooter class="flex-shrink-0 pt-4">
+            <DialogFooter class="flex-shrink-0">
                 <Button class="mx-auto">
                     <a href=""> Enhance! </a>
                 </Button>

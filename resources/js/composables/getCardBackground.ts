@@ -1,4 +1,4 @@
-export function getCardBackground(frameType: string): string {
+export function getCardBackground(frameType: string, vertical?: boolean): string {
     switch (frameType) {
         case 'normal':
             return 'bg-[#F8D37A]'; // Normal Monster
@@ -23,16 +23,34 @@ export function getCardBackground(frameType: string): string {
         case 'skill':
             return 'bg-[#6DC3E6]'; // Skill Card (use Ritual color)
         case 'normal_pendulum':
+            if (vertical) {
+                return 'bg-[linear-gradient(to_bottom,#F8D37A_0%,#1E9C4B_100%)]';
+            }
             return 'bg-[linear-gradient(to_right,#F8D37A_0%,#1E9C4B_100%)]';
         case 'effect_pendulum':
+            if (vertical) {
+                return 'bg-[linear-gradient(to_bottom,#D19B6A_0%,#1E9C4B_100%)]';
+            }
             return 'bg-[linear-gradient(to_right,#D19B6A_0%,#1E9C4B_100%)]';
         case 'fusion_pendulum':
+            if (vertical) {
+                return 'bg-[linear-gradient(to_bottom,#A97EDB_0%,#1E9C4B_100%)]';
+            }
             return 'bg-[linear-gradient(to_right,#A97EDB_0%,#1E9C4B_100%)]';
         case 'synchro_pendulum':
+            if (vertical) {
+                return 'bg-[linear-gradient(to_bottom,#EDEDED_0%,#1E9C4B_100%)]';
+            }
             return 'bg-[linear-gradient(to_right,#EDEDED_0%,#1E9C4B_100%)]';
         case 'xyz_pendulum':
+            if (vertical) {
+                return 'bg-[linear-gradient(to_bottom,#222222_0%,#1E9C4B_100%)]';
+            }
             return 'bg-[linear-gradient(to_right,#222222_0%,#1E9C4B_100%)]';
         case 'ritual_pendulum':
+            if (vertical) {
+                return 'bg-[linear-gradient(to_bottom,#6DC3E6_0%,#1E9C4B_100%)]';
+            }
             return 'bg-[linear-gradient(to_right,#6DC3E6_0%,#1E9C4B_100%)]';
         default:
             return '';

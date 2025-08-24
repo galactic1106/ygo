@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
-// import { Separator } from '@/components/ui/separator';
+import { getCardBackground } from '@/composables/getCardBackground';
 import { ApiCard } from '@/types';
 import { ArrowDown, ArrowDownLeft, ArrowDownRight, ArrowLeft, ArrowRight, ArrowUp, ArrowUpLeft, ArrowUpRight } from 'lucide-vue-next';
 import { computed } from 'vue';
-// import { getCardBackground } from '@/composables/getCardBackground';
 
 interface Props {
     card: ApiCard;
@@ -19,7 +18,7 @@ const hasRight = computed(() => Props.card.linkmarkers?.includes('Right'));
 const hasBottomLeft = computed(() => Props.card.linkmarkers?.includes('Bottom-Left'));
 const hasBottom = computed(() => Props.card.linkmarkers?.includes('Bottom'));
 const hasBottomRight = computed(() => Props.card.linkmarkers?.includes('Bottom-Right'));
-// const cardBackgroundClass = computed(() => getCardBackground(Props.card.frameType));
+const cardBackgroundClass = computed(() => getCardBackground(Props.card.frameType, true));
 </script>
 
 <template>
@@ -27,16 +26,16 @@ const hasBottomRight = computed(() => Props.card.linkmarkers?.includes('Bottom-R
         <div class="relative flex aspect-square basis-1/4 items-center justify-center">
             <template v-if="card.linkmarkers">
                 <!-- Absolutely positioned arrows -->
-                <ArrowUpLeft v-if="hasTopLeft" class="absolute top-[-5%] left-[-5%] stroke-3 text-red-500" />
-                <ArrowUp v-if="hasTop" class="absolute top-[-5%] left-1/2 -translate-x-1/2 stroke-3 text-red-500" />
-                <ArrowUpRight v-if="hasTopRight" class="absolute top-[-5%] right-[-5%] stroke-3 text-red-500" />
+                <ArrowUpLeft v-if="hasTopLeft" class="absolute top-[-6%] left-[-6%] stroke-3 text-red-500" />
+                <ArrowUp v-if="hasTop" class="absolute top-[-7%] left-1/2 -translate-x-1/2 stroke-3 text-red-500" />
+                <ArrowUpRight v-if="hasTopRight" class="absolute top-[-6%] right-[-5%] stroke-3 text-red-500" />
 
-                <ArrowLeft v-if="hasLeft" class="absolute top-1/2 left-[-5%] -translate-y-1/2 stroke-3 text-red-500" />
-                <ArrowRight v-if="hasRight" class="absolute top-1/2 right-[-5%] -translate-y-1/2 stroke-3 text-red-500" />
+                <ArrowLeft v-if="hasLeft" class="absolute top-1/2 left-[-7%] -translate-y-1/2 stroke-3 text-red-500" />
+                <ArrowRight v-if="hasRight" class="absolute top-1/2 right-[-7%] -translate-y-1/2 stroke-3 text-red-500" />
 
-                <ArrowDownLeft v-if="hasBottomLeft" class="absolute bottom-[-5%] left-[-5%] stroke-3 text-red-500" />
-                <ArrowDown v-if="hasBottom" class="absolute bottom-[-5%] left-1/2 -translate-x-1/2 stroke-3 text-red-500" />
-                <ArrowDownRight v-if="hasBottomRight" class="absolute right-[-5%] bottom-[-5%] stroke-3 text-red-500" />
+                <ArrowDownLeft v-if="hasBottomLeft" class="absolute bottom-[-6%] left-[-6%] stroke-3 text-red-500" />
+                <ArrowDown v-if="hasBottom" class="absolute bottom-[-7%] left-1/2 -translate-x-1/2 stroke-3 text-red-500" />
+                <ArrowDownRight v-if="hasBottomRight" class="absolute right-[-6%] bottom-[-6%] stroke-3 text-red-500" />
             </template>
             <template v-if="card.id">
                 <img
@@ -46,45 +45,49 @@ const hasBottomRight = computed(() => Props.card.linkmarkers?.includes('Bottom-R
                 />
             </template>
         </div>
-        <div class="grid flex-1 grid-cols-12 grid-rows-3 gap-2">
-            <div class="col-span-8 row-start-1">
+        <div class="grid flex-1 grid-flow-col grid-cols-12 grid-rows-4 gap-y-2">
+            <div class="col-start-1 col-end-7 row-start-1">
                 <HoverCard>
-                    <HoverCardTrigger class="overflow-ellipsis whitespace-nowrap">
-                        {{ card.name }}
-                    </HoverCardTrigger>
+                    <p class="overflow-hidden text-nowrap text-ellipsis">
+                        <HoverCardTrigger>
+                            {{ card.name }}
+                        </HoverCardTrigger>
+                    </p>
                     <HoverCardContent class="w-fit max-w-[50vw]">
+                        {{ card.name }}
+                        <br />
                         {{ card.desc }}
                     </HoverCardContent>
                 </HoverCard>
             </div>
-            <div class="col-span-4 row-start-1 ">
-                    <template v-if="card.atk">Atk: {{ card.atk }}</template>
+            <div class="col-start-8 col-end-11 row-start-1">
+                <template v-if="card.level">
+                    <template v-if="card.frameType === 'xyz'">Rank</template>
+                    <template v-else>Level</template>
+                    : {{ card.level }}
+                </template>
+                <template v-else-if="card.linkval && card.linkval > 0"> Linkval: {{ card.linkval }} </template>
             </div>
-            <div class="col-span-8 row-start-2"></div>
-            <div class="col-span-4 row-start-2">
-            <template v-if="card.def">Def: {{ card.def }}</template>
-            </div>
-            <!--
+            <div class="col-start-12 col-end-12 row-start-1 row-end-5 rounded-3xl text-[rgba(0,0,0,0)]" :class="cardBackgroundClass"></div>
 
-                <div class="flex w-full items-center justify-center">
-                    <span v-if="card.level" class="grow-2 text-start">
-                        <template v-if="card.frameType === 'xyz'">Rank</template>
-                        <template v-else>Level</template>
-                        : {{ card.level }}
-                    </span>
-                    <span v-if="card.linkval && card.linkval > 0" class="grow-2 text-start"> Linkval: {{ card.linkval }} </span>
-                    <span v-if="card.archetype">Arc: {{ card.archetype }}</span> <span v-else style="min-height: 1rem"></span>
-                    <span v-if="card.attribute" class="grow-2 text-end">{{ card.attribute }}</span>
-                </div>
+            <div class="col-start-1 col-end-5 row-start-2">
+                <template v-if="card.attribute">{{ card.attribute }}</template>
+            </div>
+            <div class="col-start-6 col-end-11 row-start-2">
+                <template v-if="card.archetype">Arc: {{ card.archetype }}</template> <span v-else style="min-height: 1rem"></span>
             </div>
 
-                    <!-- <span class="flex w-full">
-                        <template v-if="card.race">{{ card.race + ' ' }} </template>
-                        <template v-if="card.type">{{ card.type }}</template>
-                    </span>
-                    <Separator orientation="horizontal" class="my-1 rounded-2xl" :class="cardBackgroundClass" style="height: 5px" /> -->
+            <div class="row-start-3 col-span-11">
+                <template v-if="card.race">{{ card.race + ' ' }} </template>
+                <template v-if="card.type">{{ card.type }}</template>
+            </div>
 
-            -->
+            <div class="col-start-1 col-end-5 row-start-4 text-start">
+                <template v-if="card.atk">Atk: {{ card.atk }}</template>
+            </div>
+            <div class="col-start-6 col-end-10 row-start-4 text-end">
+                <template v-if="card.def">Def: {{ card.def }}</template>
+            </div>
         </div>
     </div>
 </template>
