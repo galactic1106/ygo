@@ -1,24 +1,18 @@
 <script setup lang="ts">
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
-import { getCardBackground } from '@/composables/getCardBackground';
+import { getLinkArrows } from '@/composables/useCardProperties';
 import { ApiCard } from '@/types';
 import { ArrowDown, ArrowDownLeft, ArrowDownRight, ArrowLeft, ArrowRight, ArrowUp, ArrowUpLeft, ArrowUpRight } from 'lucide-vue-next';
-import { computed } from 'vue';
 
 interface Props {
     card: ApiCard;
 }
-const Props = defineProps<Props>();
+const props = defineProps<Props>();
 
-const hasTopLeft = computed(() => Props.card.linkmarkers?.includes('Top-Left'));
-const hasTop = computed(() => Props.card.linkmarkers?.includes('Top'));
-const hasTopRight = computed(() => Props.card.linkmarkers?.includes('Top-Right'));
-const hasLeft = computed(() => Props.card.linkmarkers?.includes('Left'));
-const hasRight = computed(() => Props.card.linkmarkers?.includes('Right'));
-const hasBottomLeft = computed(() => Props.card.linkmarkers?.includes('Bottom-Left'));
-const hasBottom = computed(() => Props.card.linkmarkers?.includes('Bottom'));
-const hasBottomRight = computed(() => Props.card.linkmarkers?.includes('Bottom-Right'));
-const cardBackgroundClass = computed(() => getCardBackground(Props.card.frameType, true));
+const { hasTopLeft, hasTop, hasTopRight, hasLeft, hasRight, hasBottomLeft, hasBottom, hasBottomRight, cardBackgroundClass } = getLinkArrows(
+    props.card,
+    true,
+);
 </script>
 
 <template>
@@ -77,7 +71,7 @@ const cardBackgroundClass = computed(() => getCardBackground(Props.card.frameTyp
                 <template v-if="card.archetype">Arc: {{ card.archetype }}</template> <span v-else style="min-height: 1rem"></span>
             </div>
 
-            <div class="row-start-3 col-span-11">
+            <div class="col-span-11 row-start-3">
                 <template v-if="card.race">{{ card.race + ' ' }} </template>
                 <template v-if="card.type">{{ card.type }}</template>
             </div>

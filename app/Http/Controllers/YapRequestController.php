@@ -15,7 +15,6 @@ class YapRequestController extends Controller
              if ($response) {
                  return $response;
              }
-
              return [];
          }
 }

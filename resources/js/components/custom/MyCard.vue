@@ -2,29 +2,21 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Separator } from '@/components/ui/separator';
+import { getLinkArrows } from '@/composables/useCardProperties';
 import { ApiCard } from '@/types';
 import { ArrowDown, ArrowDownLeft, ArrowDownRight, ArrowLeft, ArrowRight, ArrowUp, ArrowUpLeft, ArrowUpRight } from 'lucide-vue-next';
-import { computed } from 'vue';
-import { getCardBackground } from '@/composables/getCardBackground';
 
 interface Props {
     card: ApiCard;
 }
-const Props = defineProps<Props>();
+const props = defineProps<Props>();
 
-const hasTopLeft = computed(() => Props.card.linkmarkers?.includes('Top-Left'));
-const hasTop = computed(() => Props.card.linkmarkers?.includes('Top'));
-const hasTopRight = computed(() => Props.card.linkmarkers?.includes('Top-Right'));
-const hasLeft = computed(() => Props.card.linkmarkers?.includes('Left'));
-const hasRight = computed(() => Props.card.linkmarkers?.includes('Right'));
-const hasBottomLeft = computed(() => Props.card.linkmarkers?.includes('Bottom-Left'));
-const hasBottom = computed(() => Props.card.linkmarkers?.includes('Bottom'));
-const hasBottomRight = computed(() => Props.card.linkmarkers?.includes('Bottom-Right'));
-const cardBackgroundClass = computed(() => getCardBackground(Props.card.frameType));
+const { hasTopLeft, hasTop, hasTopRight, hasLeft, hasRight, hasBottomLeft, hasBottom, hasBottomRight, cardBackgroundClass } = getLinkArrows(
+    props.card,
+);
 </script>
 
 <template>
-    <div class="">
         <Card class="flex flex-col">
             <CardHeader>
                 <CardTitle>
@@ -54,7 +46,7 @@ const cardBackgroundClass = computed(() => getCardBackground(Props.card.frameTyp
                 </CardDescription>
             </CardHeader>
 
-            <CardContent class="relative mx-6 flex flex-1 items-center justify-center px-0 h-[75%]">
+            <CardContent class="relative mx-6 flex h-[75%] flex-1 items-center justify-center px-0">
                 <template v-if="card.linkmarkers">
                     <!-- Absolutely positioned arrows -->
                     <ArrowUpLeft v-if="hasTopLeft" class="absolute top-[-5%] left-[-5%] stroke-3 text-red-500" />
@@ -90,5 +82,4 @@ const cardBackgroundClass = computed(() => getCardBackground(Props.card.frameTyp
                 </span>
             </CardFooter>
         </Card>
-    </div>
 </template>

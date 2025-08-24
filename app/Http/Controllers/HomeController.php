@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Services\YgoApiProxyService;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class HomeController extends Controller
@@ -21,7 +20,7 @@ class HomeController extends Controller
      * @param Request $request
      * @return \Inertia\Response
      */
-    public function __invoke(Request $request): \Inertia\Response
+    public function __invoke(): \Inertia\Response
     {
         $latestMonsters = $this->yaps->getCardData([
             'type'=> implode(',',$this->yaps->getTypes('main monsters')),
