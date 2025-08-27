@@ -7,15 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-/**
- * @mixin IdeHelperDeck
- */
 class Deck extends Model
 {
     /** @use HasFactory<\Database\Factories\DeckFactory> */
     use HasFactory;
 
-    protected $fillable = ["name", "notes"];
+    protected $fillable = ['name', 'notes'];
     public $timestamps = true;
     /**
      * @return BelongsTo<User,Deck>
@@ -30,6 +27,6 @@ class Deck extends Model
      */
     public function cards(): BelongsToMany
     {
-        return $this->belongsToMany(Card::class)->withPivot("quantity");
+        return $this->belongsToMany(Card::class)->withPivot('quantity');
     }
 }

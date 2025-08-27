@@ -8,9 +8,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 
-/**
- * @mixin IdeHelperUser
- */
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -21,14 +18,14 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $fillable = ["name", "email", "password", "phone"];
+    protected $fillable = ['name', 'email', 'password', 'phone'];
 
     /**
      * The attributes that should be hidden for serialization.
      *
      * @var list<string>
      */
-    protected $hidden = ["password", "remember_token"];
+    protected $hidden = ['password', 'remember_token'];
 
     /**
      * Get the attributes that should be cast.
@@ -38,8 +35,8 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            "email_verified_at" => "datetime",
-            "password" => "hashed",
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
         ];
     }
 
@@ -48,13 +45,9 @@ class User extends Authenticatable
      */
     public function initials(): string
     {
-        return Str::of($this->name)
-            ->explode(" ")
-            ->take(2)
-            ->map(fn($word) => Str::substr($word, 0, 1))
-            ->implode("");
+        return Str::of($this->name)->explode(' ')->take(2)->map(fn($word) => Str::substr($word, 0, 1))->implode('');
     }
-    
+
     /**
      * @return HasMany<Deck,User>
      */
@@ -62,11 +55,20 @@ class User extends Authenticatable
     {
         return $this->hasMany(Deck::class);
     }
-    
+
     /**
      * @return HasMany<Offer,User>
      */
-    public function offers(): HasMany{
+    public function offers(): HasMany
+    {
         return $this->hasMany(Offer::class);
+    }
+
+    /**
+     * @return HasMany<Order,User>
+     */
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
     }
 }

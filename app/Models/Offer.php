@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Card;
+use App\Models\OldPrice;
+use App\Models\OldQuantity;
 
-/**
- * @mixin IdeHelperOffer
- */
 class Offer extends Model
 {
     /** @use HasFactory<\Database\Factories\OfferFactory> */
@@ -44,5 +45,10 @@ class Offer extends Model
     public function oldPrices(): HasMany
     {
         return $this->hasMany(OldPrice::class);
+    }
+    
+    public  function orders():BelongsToMany
+    {
+        return $this->belongsToMany(Order::class)->withPivot(['quantity']);
     }
 }

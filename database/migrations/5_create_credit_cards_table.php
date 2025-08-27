@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Order;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,7 +16,9 @@ return new class extends Migration {
             $table->string("number", 4);
             $table->date("expiration");
             $table->timestamps();
-            $table->foreignIdFor(Order::class)->constrained();
+            
+            $table->unique(['cvv','number','expiration']);
+            $table->index(['cvv','number','expiration']);
         });
     }
 

@@ -4,22 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * @mixin IdeHelperCreditCard
- */
 class CreditCard extends Model
 {
     /** @use HasFactory<\Database\Factories\CreditCardFactory> */
     use HasFactory;
 
-    protected $fillable = ["cvv", "number", "expiration"];
+    protected $fillable = ['cvv', 'number', 'expiration'];
+    
     /**
-     * @return HasOne<Order,CreditCard>
+     * @return HasMany<Order,CreditCard>
      */
-    public function order(): HasOne
+    public function orders():HasMany
     {
-        return $this->hasOne(Order::class);
+        return $this->hasMany(Order::class);
     }
 }

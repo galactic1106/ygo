@@ -7,9 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-/**
- * @mixin IdeHelperOrder
- */
 class Order extends Model
 {
     /** @use HasFactory<\Database\Factories\OrderFactory> */
@@ -36,6 +33,7 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
+    
     /**
      * @return BelongsTo<CreditCard,Order>
      */
