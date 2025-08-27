@@ -17,7 +17,8 @@ class OldQuantityFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'offer_id' => \App\Models\Offer::factory(),
+            'old_quantity' => fake()->numberBetween(1, 10),
         ];
     }
 }

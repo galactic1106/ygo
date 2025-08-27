@@ -17,7 +17,9 @@ class CreditCardFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'cvv' => fake()->numerify('###'),
+            'number' => fake()->numerify('####'),
+            'expiration' => fake()->dateTimeBetween('now', '+5 years')->format('Y-m-d'),
         ];
     }
 }

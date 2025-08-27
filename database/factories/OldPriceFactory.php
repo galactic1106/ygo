@@ -17,7 +17,8 @@ class OldPriceFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'offer_id' => \App\Models\Offer::factory(),
+            'old_price' => fake()->randomFloat(2, 0.5, 100.0),
         ];
     }
 }
