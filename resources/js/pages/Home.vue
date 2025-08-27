@@ -58,7 +58,12 @@ const breadcrumbs: BreadcrumbItemType[] = [
                             <AlertTitle> Latest Monsters not found </AlertTitle>
                         </Alert>
                         <template v-else v-for="card in latestMonsters.data" :key="card.id">
-                            <MyCard :card="card"/>
+                            <div class="">
+                                <MyCard :card="card" class="flex !aspect-[2.25/3.25] flex-0 shrink-0" />
+                            </div>
+                            <!-- <div>
+                                <img :src="'/yap/img/card/' + card.id" alt="Image unavailable" class="aspect-[2.25/3.25]" />
+                            </div> -->
                         </template>
                     </div>
                 </TabsContent>
@@ -69,7 +74,7 @@ const breadcrumbs: BreadcrumbItemType[] = [
                             <AlertTitle> Latest Spells not found </AlertTitle>
                         </Alert>
                         <template v-else v-for="card in latestSpells.data" :key="card.id">
-                            <MyCard :card="card"/>
+                            <MyCard :card="card" />
                         </template>
                     </div>
                 </TabsContent>
@@ -79,8 +84,8 @@ const breadcrumbs: BreadcrumbItemType[] = [
                         <Alert variant="destructive" v-if="!latestTraps.data">
                             <AlertTitle> Latest Traps not found </AlertTitle>
                         </Alert>
-                        <template v-else v-for="c in latestTraps.data" :key="c.id">
-                            <MyCard :card="c" />
+                        <template v-else v-for="card in latestTraps.data" :key="card.id">
+                            <MyCard :card="card" />
                         </template>
                     </div>
                 </TabsContent>
@@ -90,8 +95,8 @@ const breadcrumbs: BreadcrumbItemType[] = [
                         <Alert variant="destructive" v-if="!latestExtra.data">
                             <AlertTitle> Latest Extra not found </AlertTitle>
                         </Alert>
-                        <template v-else v-for="c in latestExtra.data" :key="c.id">
-                            <MyCard :card="c" />
+                        <template v-else v-for="card in latestExtra.data" :key="card.id">
+                            <MyCard :card="card" />
                         </template>
                     </div>
                 </TabsContent>

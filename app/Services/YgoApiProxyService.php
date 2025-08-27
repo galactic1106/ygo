@@ -72,9 +72,9 @@ class YgoApiProxyService
     public function getCardData(array $params): ?array
     {
         $cacheKey = 'request_' . md5(http_build_query($params));
-        if (!$params['num'] || $params['num'] > 100) {
+        if (!isset($params['num']) || $params['num'] > 100) {
             $params['num'] = 20;
-            if (!$params['offset']) {
+            if (!isset($params['offset'])) {
                 $params['offset'] = 0;
             }
         }
