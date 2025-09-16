@@ -19,6 +19,7 @@ let searchTimeout: ReturnType<typeof setTimeout> | null = null;
 async function getCards(fname: string): Promise<ApiCard[]> {
     try {
         const response = await axios.get(endpoint, { params: { fname: fname, offset: 0, num: 10 } });
+        console.log(response);
         const ygoApiResponse = response.data;
         if (ygoApiResponse.data) {
             console.log('returned data: ');

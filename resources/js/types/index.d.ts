@@ -37,15 +37,22 @@ export interface User {
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;
-
+export interface CardSet {
+    set_name: string;
+    set_code: sting;
+    set_rarity: string;
+    set_rarity_code: string;
+    set_price: number;
+}
 export interface ApiCard {
     id: number;
     name: string;
     type: string;
     frameType: string;
     desc: string;
-    atk?: number; 
-    def?: number; 
+    pend_desc?: string;
+    atk?: number;
+    def?: number;
     level?: number;
     race: string;
     attribute?: string;
@@ -61,11 +68,11 @@ export interface ApiCard {
         image_url_cropped: string;
     }[];
     card_prices: {
-        cardmarket_price: string;
-        tcgplayer_price: string;
-        ebay_price: string;
-        amazon_price: string;
-        coolstuffinc_price: string;
+        cardmarket_price: number;
+        tcgplayer_price: number;
+        ebay_price: number;
+        amazon_price: number;
+        coolstuffinc_price: number;
     }[];
 }
 
@@ -82,5 +89,5 @@ export interface Meta {
 export interface YgoApiResponse {
     data?: ApiCard[];
     meta?: Meta;
-    error?: string; 
+    error?: string;
 }
