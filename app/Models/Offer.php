@@ -7,13 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\Card;
-use App\Models\OldPrice;
-use App\Models\OldQuantity;
 
 /**
- * 
- *
  * @property int $id
  * @property string $quality
  * @property string $description
@@ -31,6 +26,7 @@ use App\Models\OldQuantity;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Order> $orders
  * @property-read int|null $orders_count
  * @property-read \App\Models\User $user
+ *
  * @method static \Database\Factories\OfferFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Offer newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Offer newQuery()
@@ -44,6 +40,7 @@ use App\Models\OldQuantity;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Offer whereQuantity($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Offer whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Offer whereUserId($value)
+ *
  * @mixin \Eloquent
  */
 class Offer extends Model
@@ -51,7 +48,8 @@ class Offer extends Model
     /** @use HasFactory<\Database\Factories\OfferFactory> */
     use HasFactory;
 
-    protected $fillable = ["quality", "description", "price", "quantity"];
+    protected $fillable = ['quality', 'description', 'price', 'quantity'];
+
     /**
      * @return BelongsTo<User,Offer>
      */
@@ -67,6 +65,7 @@ class Offer extends Model
     {
         return $this->belongsTo(Card::class);
     }
+
     /**
      * @return HasMany<OldQuantity,Offer>
      */
@@ -74,6 +73,7 @@ class Offer extends Model
     {
         return $this->hasMany(OldQuantity::class);
     }
+
     /**
      * @return HasMany<OldPrice,Offer>
      */
@@ -81,8 +81,8 @@ class Offer extends Model
     {
         return $this->hasMany(OldPrice::class);
     }
-    
-    public  function orders():BelongsToMany
+
+    public function orders(): BelongsToMany
     {
         return $this->belongsToMany(Order::class)->withPivot(['quantity']);
     }

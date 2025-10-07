@@ -56,7 +56,6 @@ class CardSeeder extends Seeder
 
     /**
      * Insert cards into the database
-     * @param array $cardData
      */
     private function insertCards(array $cardData): void
     {

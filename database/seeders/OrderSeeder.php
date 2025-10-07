@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\CreditCard;
 use App\Models\Order;
 use App\Models\User;
-use App\Models\CreditCard;
 use Illuminate\Database\Seeder;
 
 class OrderSeeder extends Seeder

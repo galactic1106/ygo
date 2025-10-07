@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Offer;
-use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class OldQuantitySeeder extends Seeder

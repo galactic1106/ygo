@@ -10,8 +10,6 @@ class HomeController extends Controller
 {
     private YgoApiProxyService $yaps;
 
-
-
     public function __construct(YgoApiProxyService $yaps)
     {
         $this->yaps = $yaps;
@@ -24,49 +22,49 @@ class HomeController extends Controller
     {
         $latestMonsters = $this->yaps->getCardData(
             [
-             'type' => implode(',', $this->yaps->getTypes('main monsters')),
-             'race' => implode(',', $this->yaps->getRaces('monster')),
-             'sort' => 'new',
-             'num' => 20,
-             'offset' => 0
+                'type' => implode(',', $this->yaps->getTypes('main monsters')),
+                'race' => implode(',', $this->yaps->getRaces('monster')),
+                'sort' => 'new',
+                'num' => 20,
+                'offset' => 0,
             ]
         );
-        //dd($this->yaps->getTypes('main monsters'),$latestMonsters);
+        // dd($this->yaps->getTypes('main monsters'),$latestMonsters);
 
         $latestSpells = $this->yaps->getCardData(
             [
-            'type' => 'spell card',
-            'sort' => 'new',
-            'num' => 20,
-            'offset' => 0
+                'type' => 'spell card',
+                'sort' => 'new',
+                'num' => 20,
+                'offset' => 0,
             ]
         );
 
         $latestTraps = $this->yaps->getCardData(
             [
-            'type' => 'trap card',
-            'sort' => 'new',
-            'num' => 20,
-            'offset' => 0
+                'type' => 'trap card',
+                'sort' => 'new',
+                'num' => 20,
+                'offset' => 0,
             ]
         );
 
         $latestExtra = $this->yaps->getCardData(
             [
-             'type' => implode(',', $this->yaps->getTypes('extra')),
-             'sort' => 'new',
-             'num' => 20,
-             'offset' => 0
+                'type' => implode(',', $this->yaps->getTypes('extra')),
+                'sort' => 'new',
+                'num' => 20,
+                'offset' => 0,
             ]
         );
 
         return Inertia::render(
             'Home',
             [
-             'latestMonsters' => $latestMonsters ?? [],
-             'latestSpells' => $latestSpells ?? [],
-             'latestTraps' => $latestTraps ?? [],
-             'latestExtra' => $latestExtra ?? [],
+                'latestMonsters' => $latestMonsters ?? [],
+                'latestSpells' => $latestSpells ?? [],
+                'latestTraps' => $latestTraps ?? [],
+                'latestExtra' => $latestExtra ?? [],
             ]
         );
     }

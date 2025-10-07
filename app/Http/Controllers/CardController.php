@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\YgoApiProxyService;
 use App\Http\Requests\CardDataRequest;
+use App\Services\YgoApiProxyService;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class CardController extends Controller
 {
     private YgoApiProxyService $yaps;
 
-    function __construct(YgoApiProxyService $yaps)
+    public function __construct(YgoApiProxyService $yaps)
     {
-        $this->yaps=$yaps;
+        $this->yaps = $yaps;
     }
+
     /**
      * Display a listing of the resource.
      */
-    public function index(CardDataRequest $request)
+    public function index(CardDataRequest $request): void
     {
         //
     }
@@ -25,9 +27,10 @@ class CardController extends Controller
     /**
      * Display the specified resource.
      */
-     public function show(string $id)
-         {
-            $card=$this->yaps->getCardData(['id'=>$id])['data'][0];
-            return Inertia::render('Card',['card'=>$card??[]]);
-         }
+    public function show(string $id): Response
+    {
+        $card = $this->yaps->getCardData(['id' => $id])['data'][0];
+
+        return Inertia::render('Card', ['card' => $card ?? []]);
+    }
 }

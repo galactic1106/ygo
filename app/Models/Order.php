@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * 
- *
  * @property int $id
  * @property string $state
  * @property string|null $country
@@ -25,6 +23,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Offer> $offers
  * @property-read int|null $offers_count
  * @property-read \App\Models\User $user
+ *
  * @method static \Database\Factories\OrderFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order newQuery()
@@ -40,6 +39,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereZipCode($value)
+ *
  * @mixin \Eloquent
  */
 class Order extends Model
@@ -48,17 +48,17 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-        "state",
-        "country",
-        "city",
-        "street",
-        "house_number",
-        "zip_code",
+        'state',
+        'country',
+        'city',
+        'street',
+        'house_number',
+        'zip_code',
     ];
 
     public function offers(): BelongsToMany
     {
-        return $this->belongsToMany(Offer::class)->withPivot("quantity");
+        return $this->belongsToMany(Offer::class)->withPivot('quantity');
     }
 
     /**
@@ -68,7 +68,7 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
-    
+
     /**
      * @return BelongsTo<CreditCard,Order>
      */

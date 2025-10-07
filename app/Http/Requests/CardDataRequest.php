@@ -34,8 +34,9 @@ class CardDataRequest extends FormRequest
                 function ($attribute, $value, $fail) {
                     $ids = array_map('trim', explode(',', $value));
                     foreach ($ids as $id) {
-                        if (!is_numeric($id)) {
+                        if (! is_numeric($id)) {
                             $fail("The '$attribute' field must be a comma-separated list of 8-digit numeric IDs.");
+
                             return;
                         }
                     }
@@ -73,17 +74,16 @@ class CardDataRequest extends FormRequest
             // --- Miscellaneous Options ---
             'misc' => ['nullable', 'string', Rule::in(['yes'])],
             'staple' => ['nullable', 'string', Rule::in(['yes'])],
-            
-            'num' => ['nullable','integer','required_with:offset'],
-            'offset' => ['nullable','integer','required_with:num'],
+
+            'num' => ['nullable', 'integer', 'required_with:offset'],
+            'offset' => ['nullable', 'integer', 'required_with:num'],
         ];
     }
 
     /**
      * Builds a validation rule for a case-insensitive, comma-separated list.
      *
-     * @param array<int, string> $validValues The list of acceptable values.
-     * @return callable
+     * @param  array<int, string>  $validValues  The list of acceptable values.
      */
     private function buildListValidationRule(array $validValues): callable
     {
@@ -95,13 +95,13 @@ class CardDataRequest extends FormRequest
             $invalidOriginals = [];
 
             foreach ($inputValues as $inputValue) {
-                if (!in_array(strtolower($inputValue), $lowerCaseValidValues)) {
+                if (! in_array(strtolower($inputValue), $lowerCaseValidValues)) {
                     $invalidOriginals[] = $inputValue;
                 }
             }
 
-            if (!empty($invalidOriginals)) {
-                $fail("The following values for '$attribute' are invalid: " . implode(', ', $invalidOriginals));
+            if (! empty($invalidOriginals)) {
+                $fail("The following values for '$attribute' are invalid: ".implode(', ', $invalidOriginals));
             }
         };
     }
@@ -109,14 +109,13 @@ class CardDataRequest extends FormRequest
     /**
      * Creates a case-insensitive "in" rule for single value fields.
      *
-     * @param array<int, string> $validValues
-     * @return callable
+     * @param  array<int, string>  $validValues
      */
     private function caseInsensitiveRule(array $validValues): callable
     {
         return function ($attribute, $value, $fail) use ($validValues) {
             // Perform a case-insensitive search in the valid values array.
-            if (collect($validValues)->first(fn($v) => strcasecmp($v, $value) === 0) === null) {
+            if (collect($validValues)->first(fn ($v) => strcasecmp($v, $value) === 0) === null) {
                 $fail("The selected '$attribute' is invalid.");
             }
         };

@@ -5,15 +5,6 @@ import { Separator } from '@/components/ui/separator';
 import { getLinkArrows } from '@/composables/useCardProperties';
 import { ApiCard } from '@/types';
 import { Square } from 'lucide-vue-next';
-// ArrowDown,
-// ArrowDownLeft,
-// ArrowDownRight,
-// ArrowLeft,
-// ArrowRight,
-// ArrowUp,
-// ArrowUpLeft,
-// ArrowUpRight
-
 interface Props {
     card: ApiCard;
 }
@@ -63,18 +54,6 @@ const { hasTopLeft, hasTop, hasTopRight, hasLeft, hasRight, hasBottomLeft, hasBo
 
         <CardContent class="relative mx-6 flex !aspect-square h-[75%] flex-1 items-center justify-center px-0">
             <template v-if="card.linkmarkers">
-                <!--
-                <ArrowUpLeft v-if="hasTopLeft" class="absolute top-[-5%] left-[-5%] stroke-3 text-red-500" />
-                <ArrowUp v-if="hasTop" class="absolute top-[-5%] left-1/2 -translate-x-1/2 stroke-3 text-red-500" />                <ArrowUpRight v-if="hasTopRight" class="absolute top-[-5%] right-[-5%] stroke-3 text-red-500" />
-
-                <ArrowLeft v-if="hasLeft" class="absolute top-1/2 left-[-5%] -translate-y-1/2 stroke-3 text-red-500" />
-                <ArrowRight v-if="hasRight" class="absolute top-1/2 right-[-5%] -translate-y-1/2 stroke-3 text-red-500" />
-
-                <ArrowDownLeft v-if="hasBottomLeft" class="absolute bottom-[-5%] left-[-5%] stroke-3 text-red-500" />
-                <ArrowDown v-if="hasBottom" class="absolute bottom-[-5%] left-1/2 -translate-x-1/2 stroke-3 text-red-500" />
-                <ArrowDownRight v-if="hasBottomRight" class="absolute right-[-5%] bottom-[-5%] stroke-3 text-red-500" />
-                -->
-
                 <Square v-if="hasTopLeft" class="absolute top-[-2.5%] left-[-2.5%] h-[20%] w-[20%] text-red-500" stroke-width="3" />
                 <Square v-if="hasTop" class="absolute top-[-2.5%] left-1/2 h-[20%] w-[20%] -translate-x-1/2 text-red-500" stroke-width="3" />
                 <Square v-if="hasTopRight" class="absolute top-[-2.5%] right-[-2.5%] h-[20%] w-[20%] text-red-500" stroke-width="3" />

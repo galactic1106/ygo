@@ -7,14 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * 
- *
  * @property int $id
  * @property float $old_price
  * @property string|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int $offer_id
  * @property-read \App\Models\Offer $offer
+ *
  * @method static \Database\Factories\OldPriceFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|OldPrice newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|OldPrice newQuery()
@@ -24,6 +23,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|OldPrice whereOfferId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|OldPrice whereOldPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|OldPrice whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class OldPrice extends Model
@@ -31,9 +31,10 @@ class OldPrice extends Model
     /** @use HasFactory<\Database\Factories\OldPriceFactory> */
     use HasFactory;
 
-    protected $fillable = ["old_price"];
+    protected $fillable = ['old_price'];
 
-    const CREATED_AT = "change_date";
+    const CREATED_AT = 'change_date';
+
     /**
      * @return BelongsTo<Offer,OldPrice>
      */

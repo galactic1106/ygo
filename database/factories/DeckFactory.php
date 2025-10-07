@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Deck>
@@ -19,7 +19,7 @@ class DeckFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'name' => fake()->words(3, true) . ' Deck',
+            'name' => fake()->words(3, true).' Deck',
             'notes' => fake()->optional()->sentence(),
         ];
     }
