@@ -8,18 +8,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
+ * 
+ *
  * @property string $id
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Deck> $decks
  * @property-read int|null $decks_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Offer> $offers
  * @property-read int|null $offers_count
- *
  * @method static \Database\Factories\CardFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Card newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Card newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Card query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Card whereId($value)
- *
  * @mixin \Eloquent
  */
 class Card extends Model

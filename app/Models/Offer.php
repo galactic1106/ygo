@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
+ * 
+ *
  * @property int $id
  * @property string $quality
  * @property string $description
@@ -26,7 +28,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Order> $orders
  * @property-read int|null $orders_count
  * @property-read \App\Models\User $user
- *
  * @method static \Database\Factories\OfferFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Offer newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Offer newQuery()
@@ -40,7 +41,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Offer whereQuantity($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Offer whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Offer whereUserId($value)
- *
  * @mixin \Eloquent
  */
 class Offer extends Model
