@@ -14,7 +14,7 @@ class YapRacesController extends Controller
      */
     public function __invoke(Request $request, YgoApiProxyService $yaps): array
     {
-        $cardType = $request->input('type', 'all');
+        $cardType = $request->get('type', 'all');
 
         return $yaps->getRaces($cardType);
     }
