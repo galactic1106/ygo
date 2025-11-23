@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useForm } from 'vee-validate';
+import { useFieldValue, useSetFieldValue } from 'vee-validate';
 
 interface Props {
   name: string;
@@ -26,7 +26,9 @@ const props = withDefaults(defineProps<Props>(), {
   showClearButton: false,
 });
 
-const form = useForm();
+// Use vee-validate composables to interact with the parent form context
+const fieldValue = useFieldValue(() => props.name);
+const setFieldValue = useSetFieldValue(() => props.name);
 </script>
 
 <template>
@@ -47,8 +49,8 @@ const form = useForm();
           type="button"
           variant="outline"
           class="h-10 w-10 p-0"
-          @click="form.setFieldValue(name, type === 'number' ? undefined : '')"
-          :disabled="!componentField.modelValue"
+          @click="setFieldValue(type === 'number' ? undefined : '')"
+          :disabled="!fieldValue"
         >
           ×
         </Button>

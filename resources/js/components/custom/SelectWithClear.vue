@@ -15,13 +15,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useForm } from 'vee-validate';
+import { useFieldValue, useSetFieldValue } from 'vee-validate';
 
 interface Props {
   name: string;
   label: string;
   placeholder: string;
-  options: string[];
+  options: string[] | number[];
   formatOption?: (option: string) => string;
 }
 
@@ -29,7 +29,9 @@ const props = withDefaults(defineProps<Props>(), {
   formatOption: (option: string) => option,
 });
 
-const form = useForm();
+// Use vee-validate composables to interact with the parent form context
+const fieldValue = useFieldValue(() => props.name);
+const setFieldValue = useSetFieldValue(() => props.name);
 </script>
 
 <template>
@@ -48,9 +50,9 @@ const form = useForm();
               <SelectItem
                 v-for="option in options"
                 :key="option"
-                :value="option"
+                :value="String(option)"
               >
-                {{ formatOption(option) }}
+                {{ formatOption(String(option)) }}
               </SelectItem>
             </SelectGroup>
           </SelectContent>
@@ -59,8 +61,8 @@ const form = useForm();
           type="button"
           variant="outline"
           class="h-10 w-10 p-0"
-          @click="form.setFieldValue(name, '')"
-          :disabled="!componentField.modelValue"
+          @click="setFieldValue('')"
+          :disabled="!fieldValue"
         >
           ×
         </Button>

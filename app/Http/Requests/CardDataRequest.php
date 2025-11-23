@@ -115,7 +115,14 @@ class CardDataRequest extends FormRequest
     {
         return function ($attribute, $value, $fail) use ($validValues) {
             // Perform a case-insensitive search in the valid values array.
-            if (collect($validValues)->first(fn ($v) => strcasecmp($v, $value) === 0) === null) {
+            $found = false;
+            foreach ($validValues as $validValue) {
+                if (strcasecmp($validValue, $value) === 0) {
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
                 $fail("The selected '$attribute' is invalid.");
             }
         };
