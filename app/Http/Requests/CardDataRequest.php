@@ -26,7 +26,7 @@ class CardDataRequest extends FormRequest
         return [
             // --- Basic Card Identifiers ---
             'name' => ['nullable', 'string', 'prohibits:id'],
-            'fname' => ['nullable', 'string', 'prohibits:id'],
+            'fname' => ['nullable', 'string', 'min:2', 'max:100', 'prohibits:id'],
             'id' => [
                 'nullable',
                 'string',

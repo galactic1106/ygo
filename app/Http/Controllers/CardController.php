@@ -56,7 +56,9 @@ class CardController extends Controller
     public function show(string $id): Response
     {
         $card = $this->yaps->getCardData(['id' => $id])['data'][0];
-
-        return Inertia::render('Card', ['card' => $card ?? []]);
+        //get other versions of the card
+        //
+        if($card){ $other = $this->yaps->getCardData(["name" => $card["name"]])["data"][0]["card_images"]; }
+        return Inertia::render('Card', ['card' => $card ?? [],"other"=>$other ?? []]);
     }
 }

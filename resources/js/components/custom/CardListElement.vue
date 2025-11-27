@@ -8,15 +8,6 @@ import { getLinkArrows } from '@/composables/useCardProperties';
 import { ApiCard } from '@/types';
 import { Link } from '@inertiajs/vue3';
 import { Square } from 'lucide-vue-next';
-// ArrowDown,
-// ArrowDownLeft,
-// ArrowDownRight,
-// ArrowLeft,
-// ArrowRight,
-// ArrowUp,
-// ArrowUpLeft,
-// ArrowUpRight
-
 interface Props {
   card: ApiCard;
 }
@@ -127,7 +118,7 @@ const {
       </div>
       <div class="col-start-8 col-end-11 row-start-1 text-end">
         <template v-if="card.level">
-          <template v-if="card.frameType === 'xyz'">Rank</template>
+          <template v-if="card.typeline.includes('Xyz')">Rank</template>
           <template v-else>Level</template>
           : {{ card.level }}
         </template>

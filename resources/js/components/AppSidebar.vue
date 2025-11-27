@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { Home, LayoutGrid } from 'lucide-vue-next';
+import { Home, LayoutGrid, LogIn, UserPlus } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
@@ -35,10 +35,12 @@ const loginSignin: NavItem[] = [
   {
     title: 'Log in',
     href: route('login'),
+    icon: LogIn,
   },
   {
     title: 'Sign in',
     href: route('register'),
+    icon: UserPlus,
   },
 ];
 

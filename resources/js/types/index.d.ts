@@ -47,6 +47,7 @@ export interface CardSet {
 export interface ApiCard {
     id: number;
     name: string;
+    typeline: string[];
     type: string;
     frameType: string;
     desc: string;

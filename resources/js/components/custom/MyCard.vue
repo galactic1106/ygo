@@ -62,7 +62,7 @@ const goToCard = () => {
 
       <CardDescription class="flex w-full flex-0 items-center justify-center">
         <span v-if="card.level" class="shrink-0 grow-2 text-start">
-          <template v-if="card.frameType === 'xyz'">Rank</template>
+          <template v-if="card.typeline.includes('Xyz')">Rank</template>
           <template v-else>Level</template>
           : {{ card.level }}
         </span>
