@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: docker.io/library/postgres:16-alpine
+    container_name: ygo-postgres
+    environment:
+      POSTGRES_USER: ygouser
+      POSTGRES_PASSWORD: ygopassword
+      POSTGRES_DB: ygodb
+      POSTGRES_INITDB_ARGS: "-E UTF8"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./go/db/migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ygouser -d ygodb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ygo-network
+
+  postgres-auth:
+    image: docker.io/library/postgres:16-alpine
+    container_name: ygo-postgres-auth
+    environment:
+      POSTGRES_USER: authuser
+      POSTGRES_PASSWORD: authpassword
+      POSTGRES_DB: authdb
+      POSTGRES_INITDB_ARGS: "-E UTF8"
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_auth_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U authuser -d authdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ygo-network
+
+  api:
+    build:
+      context: ./go
+      dockerfile: Containerfile
+    container_name: ygo-api
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ygouser
+      DB_PASSWORD: ygopassword
+      DB_NAME: ygodb
+      DB_SSLMODE: disable
+      GIN_MODE: release
+    expose:
+      - "8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - ygo-network
+    restart: unless-stopped
+
+  angie:
+    build:
+      context: ./angie
+      dockerfile: Containerfile
+    container_name: ygo-angie
+    ports:
+      - "80:80"
+      - "443:443/tcp"
+      - "443:443/udp"
+    depends_on:
+      - api
+    networks:
+      - ygo-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+  postgres_auth_data:
+    driver: local
+
+networks:
+  ygo-network:
+    driver: bridge

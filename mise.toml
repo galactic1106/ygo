@@ -1,0 +1,5 @@
+[tools]
+go = "latest"
+sqlc = "latest"
+gomigrate = "latest"
+podman = "latest"

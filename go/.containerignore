@@ -1,0 +1,58 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+*.md
+README.md
+LICENSE
+
+# Development files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Testing
+*_test.go
+test/
+tests/
+
+# Database
+*.db
+*.sqlite
+*.sql
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Build artifacts
+bin/
+dist/
+build/
+
+# Migrations (if running separately)
+# db/migrations
+
+# CI/CD
+.github
+.gitlab-ci.yml
+
+# Container files
+Containerfile
+.containerignore
