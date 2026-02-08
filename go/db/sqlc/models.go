@@ -26,25 +26,26 @@ type BanlistInfo struct {
 }
 
 type Card struct {
-	CardID            int32          `json:"card_id"`
-	Name              string         `json:"name"`
-	TypeID            int32          `json:"type_id"`
-	HrTypeID          int32          `json:"hr_type_id"`
-	FrameID           int32          `json:"frame_id"`
-	Description       string         `json:"description"`
-	RaceID            int32          `json:"race_id"`
-	AttributeID       pgtype.Int4    `json:"attribute_id"`
-	ArchetypeID       pgtype.Int4    `json:"archetype_id"`
-	Atk               pgtype.Int2    `json:"atk"`
-	Def               pgtype.Int2    `json:"def"`
-	Level             pgtype.Int2    `json:"level"`
-	Scale             pgtype.Int2    `json:"scale"`
-	Linkval           pgtype.Int2    `json:"linkval"`
-	CardmarketPrice   pgtype.Numeric `json:"cardmarket_price"`
-	TcgplayerPrice    pgtype.Numeric `json:"tcgplayer_price"`
-	EbayPrice         pgtype.Numeric `json:"ebay_price"`
-	AmazonPrice       pgtype.Numeric `json:"amazon_price"`
-	CoolstuffincPrice pgtype.Numeric `json:"coolstuffinc_price"`
+	CardID            int32            `json:"card_id"`
+	Name              string           `json:"name"`
+	TypeID            int32            `json:"type_id"`
+	HrTypeID          int32            `json:"hr_type_id"`
+	FrameID           int32            `json:"frame_id"`
+	Description       string           `json:"description"`
+	RaceID            int32            `json:"race_id"`
+	AttributeID       pgtype.Int4      `json:"attribute_id"`
+	ArchetypeID       pgtype.Int4      `json:"archetype_id"`
+	Atk               pgtype.Int2      `json:"atk"`
+	Def               pgtype.Int2      `json:"def"`
+	Level             pgtype.Int2      `json:"level"`
+	Scale             pgtype.Int2      `json:"scale"`
+	Linkval           pgtype.Int2      `json:"linkval"`
+	CardmarketPrice   pgtype.Numeric   `json:"cardmarket_price"`
+	TcgplayerPrice    pgtype.Numeric   `json:"tcgplayer_price"`
+	EbayPrice         pgtype.Numeric   `json:"ebay_price"`
+	AmazonPrice       pgtype.Numeric   `json:"amazon_price"`
+	CoolstuffincPrice pgtype.Numeric   `json:"coolstuffinc_price"`
+	LastImportAt      pgtype.Timestamp `json:"last_import_at"`
 }
 
 type CardLinkMarker struct {
@@ -68,7 +69,8 @@ type CardSetInfo struct {
 }
 
 type DbVersion struct {
-	Version string `json:"version"`
+	Version    string           `json:"version"`
+	LastSyncAt pgtype.Timestamp `json:"last_sync_at"`
 }
 
 type Frame struct {

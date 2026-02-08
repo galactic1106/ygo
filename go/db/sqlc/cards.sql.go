@@ -11,6 +11,62 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const selectCardById = `-- name: SelectCardById :one
+SELECT card_id, name, type_id, hr_type_id, frame_id, description, race_id, attribute_id, archetype_id, atk, def, level, scale, linkval, cardmarket_price, tcgplayer_price, ebay_price, amazon_price, coolstuffinc_price, last_import_at FROM cards WHERE cards.card_id=$1
+`
+
+func (q *Queries) SelectCardById(ctx context.Context, cardID int32) (Card, error) {
+	row := q.db.QueryRow(ctx, selectCardById, cardID)
+	var i Card
+	err := row.Scan(
+		&i.CardID,
+		&i.Name,
+		&i.TypeID,
+		&i.HrTypeID,
+		&i.FrameID,
+		&i.Description,
+		&i.RaceID,
+		&i.AttributeID,
+		&i.ArchetypeID,
+		&i.Atk,
+		&i.Def,
+		&i.Level,
+		&i.Scale,
+		&i.Linkval,
+		&i.CardmarketPrice,
+		&i.TcgplayerPrice,
+		&i.EbayPrice,
+		&i.AmazonPrice,
+		&i.CoolstuffincPrice,
+		&i.LastImportAt,
+	)
+	return i, err
+}
+
+const selectUpdatedCardsIds = `-- name: SelectUpdatedCardsIds :many
+SELECT cards.card_id FROM cards WHERE cards.last_import_at = $1
+`
+
+func (q *Queries) SelectUpdatedCardsIds(ctx context.Context, lastImportAt pgtype.Timestamp) ([]int32, error) {
+	rows, err := q.db.Query(ctx, selectUpdatedCardsIds, lastImportAt)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []int32
+	for rows.Next() {
+		var card_id int32
+		if err := rows.Scan(&card_id); err != nil {
+			return nil, err
+		}
+		items = append(items, card_id)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const upsertBanlistInfo = `-- name: UpsertBanlistInfo :exec
 INSERT INTO banlist_info (card_id, ban_tcg, ban_ocg, ban_goat)
 VALUES ($1, $2, $3, $4)
@@ -42,12 +98,12 @@ INSERT INTO cards (
     card_id, name, type_id, hr_type_id, frame_id, description,
     race_id, attribute_id, archetype_id,
     atk, def, level, scale, linkval,
-    cardmarket_price, tcgplayer_price, ebay_price, amazon_price, coolstuffinc_price
+    cardmarket_price, tcgplayer_price, ebay_price, amazon_price, coolstuffinc_price, last_import_at
 ) VALUES (
     $1, $2, $3, $4, $5, $6,
     $7, $8, $9,
     $10, $11, $12, $13, $14,
-    $15, $16, $17, $18, $19
+    $15, $16, $17, $18, $19, $20
 )
 ON CONFLICT (card_id) DO UPDATE SET
     name = EXCLUDED.name,
@@ -67,29 +123,31 @@ ON CONFLICT (card_id) DO UPDATE SET
     tcgplayer_price = EXCLUDED.tcgplayer_price,
     ebay_price = EXCLUDED.ebay_price,
     amazon_price = EXCLUDED.amazon_price,
-    coolstuffinc_price = EXCLUDED.coolstuffinc_price
+    coolstuffinc_price = EXCLUDED.coolstuffinc_price,
+    last_import_at = $20
 `
 
 type UpsertCardParams struct {
-	CardID            int32          `json:"card_id"`
-	Name              string         `json:"name"`
-	TypeID            int32          `json:"type_id"`
-	HrTypeID          int32          `json:"hr_type_id"`
-	FrameID           int32          `json:"frame_id"`
-	Description       string         `json:"description"`
-	RaceID            int32          `json:"race_id"`
-	AttributeID       pgtype.Int4    `json:"attribute_id"`
-	ArchetypeID       pgtype.Int4    `json:"archetype_id"`
-	Atk               pgtype.Int2    `json:"atk"`
-	Def               pgtype.Int2    `json:"def"`
-	Level             pgtype.Int2    `json:"level"`
-	Scale             pgtype.Int2    `json:"scale"`
-	Linkval           pgtype.Int2    `json:"linkval"`
-	CardmarketPrice   pgtype.Numeric `json:"cardmarket_price"`
-	TcgplayerPrice    pgtype.Numeric `json:"tcgplayer_price"`
-	EbayPrice         pgtype.Numeric `json:"ebay_price"`
-	AmazonPrice       pgtype.Numeric `json:"amazon_price"`
-	CoolstuffincPrice pgtype.Numeric `json:"coolstuffinc_price"`
+	CardID            int32            `json:"card_id"`
+	Name              string           `json:"name"`
+	TypeID            int32            `json:"type_id"`
+	HrTypeID          int32            `json:"hr_type_id"`
+	FrameID           int32            `json:"frame_id"`
+	Description       string           `json:"description"`
+	RaceID            int32            `json:"race_id"`
+	AttributeID       pgtype.Int4      `json:"attribute_id"`
+	ArchetypeID       pgtype.Int4      `json:"archetype_id"`
+	Atk               pgtype.Int2      `json:"atk"`
+	Def               pgtype.Int2      `json:"def"`
+	Level             pgtype.Int2      `json:"level"`
+	Scale             pgtype.Int2      `json:"scale"`
+	Linkval           pgtype.Int2      `json:"linkval"`
+	CardmarketPrice   pgtype.Numeric   `json:"cardmarket_price"`
+	TcgplayerPrice    pgtype.Numeric   `json:"tcgplayer_price"`
+	EbayPrice         pgtype.Numeric   `json:"ebay_price"`
+	AmazonPrice       pgtype.Numeric   `json:"amazon_price"`
+	CoolstuffincPrice pgtype.Numeric   `json:"coolstuffinc_price"`
+	LastImportAt      pgtype.Timestamp `json:"last_import_at"`
 }
 
 func (q *Queries) UpsertCard(ctx context.Context, arg UpsertCardParams) error {
@@ -113,6 +171,7 @@ func (q *Queries) UpsertCard(ctx context.Context, arg UpsertCardParams) error {
 		arg.EbayPrice,
 		arg.AmazonPrice,
 		arg.CoolstuffincPrice,
+		arg.LastImportAt,
 	)
 	return err
 }

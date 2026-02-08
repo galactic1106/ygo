@@ -4,7 +4,6 @@
 
 # Documentation
 *.md
-README.md
 LICENSE
 
 # Development files
@@ -28,6 +27,7 @@ tests/
 *.db
 *.sqlite
 *.sql
+!db/migrations/*.sql
 
 # Logs
 *.log
@@ -45,9 +45,10 @@ temp/
 bin/
 dist/
 build/
+api
 
-# Migrations (if running separately)
-# db/migrations
+# Storage (runtime image cache, volume-mounted)
+storage/
 
 # CI/CD
 .github

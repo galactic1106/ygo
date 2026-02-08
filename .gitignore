@@ -1,2 +1,37 @@
+# Environment files
 .env
 .env.*
+!example.env
+
+# SSL certificates
+angie/ssl/*.pem
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.zed/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Go build artifacts
+go/bin/
+go/tmp/
+go/api
+
+# Logs
+*.log
+
+# Database files
+*.db
+*.sqlite
+
+#api storage
+go/storage/
+
+# Podman/Docker
+*.tar

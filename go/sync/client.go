@@ -6,14 +6,22 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
+	"path/filepath"
 	"time"
+
+	"golang.org/x/time/rate"
 )
 
 const (
-	baseURL    = "https://db.ygoprodeck.com/api/v7"
-	versionURL = baseURL + "/checkDBVer.php"
-	cardsURL   = baseURL + "/cardinfo.php"
-	setsURL    = baseURL + "/cardsets.php"
+	BaseURL         = "https://db.ygoprodeck.com/api/v7"
+	VersionURL      = BaseURL + "/checkDBVer.php"
+	CardsURL        = BaseURL + "/cardinfo.php"
+	SetsURL         = BaseURL + "/cardsets.php"
+	BaseImageURL    = "https://images.ygoprodeck.com/images"
+	SmallImageURL   = BaseImageURL + "/cards_small/"
+	CardImageURL    = BaseImageURL + "/cards/"
+	CroppedImageURL = BaseImageURL + "/cards_cropped/"
 )
 
 type VersionResponse struct {
@@ -26,7 +34,7 @@ type CardsResponse struct {
 }
 
 type Card struct {
-	ID                    int32          `json:"id"`
+	ID                    int32        `json:"id"`
 	Name                  string       `json:"name"`
 	Type                  string       `json:"type"`
 	HumanReadableCardType string       `json:"humanReadableCardType"`
@@ -75,7 +83,13 @@ type CardSet struct {
 	TCGDate    string `json:"tcg_date"`
 }
 
-func fetchJSON(ctx context.Context, url string, target any) error {
+func FetchJSON(ctx context.Context, limiter *rate.Limiter, url string, target any) error {
+	if limiter != nil {
+		if err := limiter.Wait(ctx); err != nil {
+			return fmt.Errorf("rate limit wait: %w", err)
+		}
+	}
+
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return fmt.Errorf("creating request: %w", err)
@@ -94,4 +108,46 @@ func fetchJSON(ctx context.Context, url string, target any) error {
 	}
 
 	return json.Unmarshal(body, target)
+}
+
+func FetchImage(ctx context.Context, limiter *rate.Limiter, url string, dest string) error {
+	if limiter != nil {
+		if err := limiter.Wait(ctx); err != nil {
+			return fmt.Errorf("rate limit wait: %w", err)
+		}
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return fmt.Errorf("creating request: %w", err)
+	}
+
+	client := &http.Client{Timeout: 120 * time.Second}
+	resp, err := client.Do(req)
+	if err != nil {
+		return fmt.Errorf("fetching %s: %w", url, err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("bad status: %s", resp.Status)
+	}
+
+	dir := filepath.Dir(dest)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return fmt.Errorf("creating directory: %w", err)
+	}
+
+	file, err := os.Create(dest)
+	if err != nil {
+		return fmt.Errorf("creating file: %w", err)
+	}
+	defer file.Close()
+
+	_, err = io.Copy(file, resp.Body)
+	if err != nil {
+		return fmt.Errorf("writing image: %w", err)
+	}
+
+	return nil
 }

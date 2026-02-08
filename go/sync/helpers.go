@@ -1,6 +1,8 @@
 package sync
 
 import (
+	"os"
+
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
@@ -22,11 +24,7 @@ func pgint2(p *int16) pgtype.Int2 {
 	return pgtype.Int2{Int16: int16(*p), Valid: true}
 }
 
-// pgint4 converts an int to a nullable pgtype.Int4.
 func pgint4(n int32) pgtype.Int4 {
-	if n == 0 {
-		return pgtype.Int4{}
-	}
 	return pgtype.Int4{Int32: int32(n), Valid: true}
 }
 
@@ -41,4 +39,9 @@ func pgnum(s string) pgtype.Numeric {
 		return pgtype.Numeric{}
 	}
 	return n
+}
+
+func fileExists(path string) bool {
+	_, err := os.Stat(path)
+	return err == nil
 }

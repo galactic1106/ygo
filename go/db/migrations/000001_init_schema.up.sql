@@ -3,7 +3,8 @@ CREATE TABLE users (
 );
 
 CREATE TABLE db_version (
-    version TEXT NOT NULL PRIMARY KEY
+    version TEXT NOT NULL PRIMARY KEY,
+    last_sync_at timestamp(0) NOT NULL DEFAULT now()
 );
 
 -- Lookup: card type from API "type" field (e.g. "Effect Monster", "Spell Card", "XYZ Monster")
@@ -86,7 +87,8 @@ CREATE TABLE cards (
     tcgplayer_price DECIMAL(10,2),
     ebay_price DECIMAL(10,2),
     amazon_price DECIMAL(10,2),
-    coolstuffinc_price DECIMAL(10,2)
+    coolstuffinc_price DECIMAL(10,2),
+    last_import_at TIMESTAMP(0) NOT NULL DEFAULT NOW()
 );
 
 -- Banlist info per card (ban_tcg, ban_ocg, ban_goat values: "Banned", "Limited", "Semi-Limited")

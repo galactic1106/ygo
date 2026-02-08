@@ -19,18 +19,18 @@ func (q *Queries) DeleteDBVersion(ctx context.Context) error {
 }
 
 const getDBVersion = `-- name: GetDBVersion :one
-SELECT version FROM db_version LIMIT 1
+SELECT version, last_sync_at FROM db_version LIMIT 1
 `
 
-func (q *Queries) GetDBVersion(ctx context.Context) (string, error) {
+func (q *Queries) GetDBVersion(ctx context.Context) (DbVersion, error) {
 	row := q.db.QueryRow(ctx, getDBVersion)
-	var version string
-	err := row.Scan(&version)
-	return version, err
+	var i DbVersion
+	err := row.Scan(&i.Version, &i.LastSyncAt)
+	return i, err
 }
 
 const insertDBVersion = `-- name: InsertDBVersion :exec
-INSERT INTO db_version (version) VALUES ($1)
+INSERT INTO db_version (version,last_sync_at) VALUES ($1,now())
 `
 
 func (q *Queries) InsertDBVersion(ctx context.Context, version string) error {

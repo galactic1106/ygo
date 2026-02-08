@@ -3,12 +3,12 @@ INSERT INTO cards (
     card_id, name, type_id, hr_type_id, frame_id, description,
     race_id, attribute_id, archetype_id,
     atk, def, level, scale, linkval,
-    cardmarket_price, tcgplayer_price, ebay_price, amazon_price, coolstuffinc_price
+    cardmarket_price, tcgplayer_price, ebay_price, amazon_price, coolstuffinc_price, last_import_at
 ) VALUES (
     $1, $2, $3, $4, $5, $6,
     $7, $8, $9,
     $10, $11, $12, $13, $14,
-    $15, $16, $17, $18, $19
+    $15, $16, $17, $18, $19, $20
 )
 ON CONFLICT (card_id) DO UPDATE SET
     name = EXCLUDED.name,
@@ -28,7 +28,8 @@ ON CONFLICT (card_id) DO UPDATE SET
     tcgplayer_price = EXCLUDED.tcgplayer_price,
     ebay_price = EXCLUDED.ebay_price,
     amazon_price = EXCLUDED.amazon_price,
-    coolstuffinc_price = EXCLUDED.coolstuffinc_price;
+    coolstuffinc_price = EXCLUDED.coolstuffinc_price,
+    last_import_at = $20;
 
 -- name: UpsertBanlistInfo :exec
 INSERT INTO banlist_info (card_id, ban_tcg, ban_ocg, ban_goat)
@@ -57,3 +58,9 @@ ON CONFLICT (card_id, set_id, rarity_id) DO UPDATE SET
 INSERT INTO card_link_markers (card_id, marker_id)
 VALUES ($1, $2)
 ON CONFLICT (card_id, marker_id) DO NOTHING;
+
+-- name: SelectUpdatedCardsIds :many
+SELECT cards.card_id FROM cards WHERE cards.last_import_at = $1;
+
+-- name: SelectCardById :one
+SELECT * FROM cards WHERE cards.card_id=$1;

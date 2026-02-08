@@ -3,12 +3,13 @@ package sync
 import (
 	"context"
 	"fmt"
-	db "ygo-mp/api/db/sqlc"
+	db "ygomp-api/db/sqlc"
 
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-func (s *Syncer) importCard(ctx context.Context, qtx *db.Queries, card Card) error {
+func (s *Syncer) importCard(ctx context.Context, qtx *db.Queries, card Card, syncTimestamp pgtype.Timestamp) error {
+
 	typeID, err := qtx.UpsertType(ctx, card.Type)
 	if err != nil {
 		return fmt.Errorf("upserting type: %w", err)
@@ -73,6 +74,7 @@ func (s *Syncer) importCard(ctx context.Context, qtx *db.Queries, card Card) err
 		EbayPrice:         pgnum(prices.Ebay),
 		AmazonPrice:       pgnum(prices.Amazon),
 		CoolstuffincPrice: pgnum(prices.CoolStuffInc),
+		LastImportAt:      syncTimestamp,
 	})
 	if err != nil {
 		return fmt.Errorf("upserting card: %w", err)
