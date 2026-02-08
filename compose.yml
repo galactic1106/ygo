@@ -1,0 +1,84 @@
+services:
+  postgres:
+    image: docker.io/library/postgres:16-alpine
+    container_name: ygo-postgres
+    env_file: .env
+    environment:
+      POSTGRES_INITDB_ARGS: "-E UTF8"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./go/db/migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ygo-network
+
+  postgres-auth:
+    image: docker.io/library/postgres:16-alpine
+    container_name: ygo-postgres-auth
+    environment:
+      POSTGRES_USER: ${AUTH_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${AUTH_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${AUTH_POSTGRES_DB}
+      POSTGRES_INITDB_ARGS: "-E UTF8"
+    env_file: .env
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_auth_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${AUTH_POSTGRES_USER} -d ${AUTH_POSTGRES_DB}",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ygo-network
+
+  api:
+    build:
+      context: ./go
+      dockerfile: Containerfile
+    container_name: ygo-api
+    env_file: .env
+    expose:
+      - "8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - ygo-network
+    restart: unless-stopped
+
+  angie:
+    build:
+      context: ./angie
+      dockerfile: Containerfile
+    container_name: ygo-angie
+    ports:
+      - "8080:80"
+      - "8443:443/tcp"
+      - "8443:443/udp"
+    depends_on:
+      - api
+    networks:
+      - ygo-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+  postgres_auth_data:
+    driver: local
+
+networks:
+  ygo-network:
+    driver: bridge

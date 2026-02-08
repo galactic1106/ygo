@@ -2,16 +2,11 @@ FROM docker.angie.software/angie:latest
 
 RUN rm -f /etc/angie/http.d/default.conf
 
-# Generate self-signed cert for dev
-RUN mkdir -p /etc/angie/ssl && \
-    apk add --no-cache openssl && \
-    openssl req -x509 -nodes -days 365 \
-      -newkey rsa:2048 \
-      -keyout /etc/angie/ssl/key.pem \
-      -out /etc/angie/ssl/cert.pem \
-      -subj "/CN=localhost" && \
-    apk del openssl
-    
+# Copy pre-generated self-signed certs from host
+RUN mkdir -p /etc/angie/ssl
+COPY ssl/cert.pem /etc/angie/ssl/cert.pem
+COPY ssl/key.pem /etc/angie/ssl/key.pem
+
 COPY angie.conf /etc/angie/angie.conf
 RUN mkdir /etc/angie/conf.d/
 COPY conf.d/ /etc/angie/conf.d/

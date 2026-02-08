@@ -1,10 +1,7 @@
 # Build stage
-FROM docker.io/library/golang:1.23-alpine AS builder
+FROM docker.io/library/golang:alpine AS builder
 
 WORKDIR /app
-
-# Install build dependencies
-RUN apk add --no-cache git
 
 # Copy go mod files
 COPY go.mod go.sum ./
@@ -13,16 +10,13 @@ RUN go mod download
 # Copy source code
 COPY . .
 
-# Build the application 
+# Build the application
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
 # Runtime stage
 FROM docker.io/library/alpine:latest
 
 WORKDIR /root/
-
-# Install ca-certificates for HTTPS requests
-RUN apk --no-cache add ca-certificates
 
 # Copy the binary from builder
 COPY --from=builder /app/main .

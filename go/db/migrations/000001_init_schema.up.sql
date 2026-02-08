@@ -46,7 +46,7 @@ CREATE TABLE archetypes (
 CREATE TABLE rarities (
     rarity_id SERIAL PRIMARY KEY,
     rarity TEXT NOT NULL UNIQUE,
-    code TEXT NOT NULL UNIQUE
+    code TEXT NOT NULL
 );
 
 -- Lookup: link marker positions (Top, Bottom, Left, Right, Top-Left, Top-Right, Bottom-Left, Bottom-Right)
@@ -76,17 +76,17 @@ CREATE TABLE cards (
     race_id INT NOT NULL REFERENCES races(race_id),
     attribute_id INT REFERENCES attributes(attribute_id),
     archetype_id INT REFERENCES archetypes(archetype_id),
-    atk INT,
-    def INT,
-    level INT,
-    scale INT,
-    linkval INT,
+    atk SMALLINT,
+    def SMALLINT,
+    level SMALLINT,
+    scale SMALLINT,
+    linkval SMALLINT,
     -- card_prices (lowest across all versions)
-    cardmarket_price DECIMAL(6,2),
-    tcgplayer_price DECIMAL(6,2),
-    ebay_price DECIMAL(6,2),
-    amazon_price DECIMAL(6,2),
-    coolstuffinc_price DECIMAL(6,2)
+    cardmarket_price DECIMAL(10,2),
+    tcgplayer_price DECIMAL(10,2),
+    ebay_price DECIMAL(10,2),
+    amazon_price DECIMAL(10,2),
+    coolstuffinc_price DECIMAL(10,2)
 );
 
 -- Banlist info per card (ban_tcg, ban_ocg, ban_goat values: "Banned", "Limited", "Semi-Limited")
@@ -110,6 +110,6 @@ CREATE TABLE card_set_info (
     card_id INT NOT NULL REFERENCES cards(card_id),
     set_id INT NOT NULL REFERENCES card_sets(set_id),
     rarity_id INT NOT NULL REFERENCES rarities(rarity_id),
-    price DECIMAL(6,2) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
     PRIMARY KEY (card_id, set_id, rarity_id)
 );
