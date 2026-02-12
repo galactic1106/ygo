@@ -48,6 +48,8 @@ services:
       dockerfile: Containerfile
     container_name: ygo-api
     env_file: .env
+    environment:
+      FORCE_COLOR: "1"
     volumes:
       - "./go/storage:/root/storage"
     expose:
