@@ -321,8 +321,8 @@ The Svelte frontend is currently in **initial setup phase** with the following c
 - ❌ Card detail pages
 - ❌ Integration with Go API endpoints
 - ❌ Image display/caching
-- ❌ Production build/deployment configuration
-- ❌ Angie reverse proxy configuration for frontend
+- ✅ Production build/deployment configuration
+- ✅ Angie reverse proxy configuration for frontend (Needs Angie conf update)
 
 The frontend currently has:
 

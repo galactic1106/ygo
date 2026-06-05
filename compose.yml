@@ -31,11 +31,7 @@ services:
     volumes:
       - postgres_auth_data:/var/lib/postgresql/data
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "pg_isready -U ${AUTH_POSTGRES_USER} -d ${AUTH_POSTGRES_DB}",
-        ]
+      test: ["CMD-SHELL", "pg_isready -U ${AUTH_POSTGRES_USER} -d ${AUTH_POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -54,6 +50,21 @@ services:
       - "./go/storage:/root/storage"
     expose:
       - "8080"
+    develop:
+      watch:
+        # 1. Sync Go source files and restart the server
+        - action: sync+restart
+          path: ./go
+          target: /app
+          ignore:
+            - storage/ # Ignore file uploads/storage to prevent loop restarts
+            - .git/
+
+        # 2. Full rebuild if dependencies change
+        - action: rebuild
+          path: ./go/go.mod
+        - action: rebuild
+          path: ./go/go.sum
     depends_on:
       postgres:
         condition: service_healthy
@@ -70,8 +81,63 @@ services:
       - "8080:80"
       - "8443:443/tcp"
       - "8443:443/udp"
+    develop:
+      watch:
+        # 1. Watch the main config file
+        - action: sync+restart
+          path: ./angie/angie.conf
+          target: /etc/angie/angie.conf
+
+        # 2. Watch the configuration directory
+        - action: sync+restart
+          path: ./angie/conf.d
+          target: /etc/angie/conf.d
+
+        # 3. Full rebuild if the Containerfile changes
+        - action: rebuild
+          path: ./angie/Containerfile
     depends_on:
       - api
+    networks:
+      - ygo-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./svelte
+      dockerfile: Containerfile
+    container_name: ygo-frontend
+    env_file: svelte/.env
+    ports:
+      - "3000:3000"
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /app/src
+          ignore:
+            - node_modules/
+
+        # 2. Watch the Svelte root HTML entrypoint
+        - action: sync
+          path: ./src/app.html
+          target: /app/src/app.html
+
+        # 3. Watch config files
+        - action: sync
+          path: ./vite.config.ts # or vite.config.js
+          target: /app/vite.config.ts
+
+        # 4. Rebuild if you install new Svelte/npm packages
+        - action: rebuild
+          path: ./package.json
+        - action: rebuild
+          path: ./bun.lockb
+    depends_on:
+      postgres-auth:
+        condition: service_healthy
+      api:
+        condition: service_started
     networks:
       - ygo-network
     restart: unless-stopped
