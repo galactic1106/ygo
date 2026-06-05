@@ -56,3 +56,6 @@ bun.lockb
 
 # Drizzle ORM
 drizzle/
+
+# Container storage i belive
+storage/
