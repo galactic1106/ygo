@@ -16,7 +16,7 @@ import (
 const (
 	BaseURL         = "https://db.ygoprodeck.com/api/v7"
 	VersionURL      = BaseURL + "/checkDBVer.php"
-	CardsURL        = BaseURL + "/cardinfo.php"
+	CardsURL        = BaseURL + "/cardinfo.php?misc=1"
 	SetsURL         = BaseURL + "/cardsets.php"
 	BaseImageURL    = "https://images.ygoprodeck.com/images"
 	SmallImageURL   = BaseImageURL + "/cards_small/"
@@ -31,6 +31,33 @@ type VersionResponse struct {
 
 type CardsResponse struct {
 	Data []Card `json:"data"`
+}
+/*
+beta_name
+views
+viewsweek
+upvotes
+downvotes
+formats
+tcg_date
+ocg_date
+konami_id
+has_effect
+md_rarity
+*/
+
+type MiscInfo struct {
+	BetaName  string   `json:"beta_name,omitempty"`
+	Views     int32    `json:"views,omitempty"`
+	Viewsweek int32    `json:"viewsweek,omitempty"`
+	Upvotes   int32    `json:"upvotes,omitempty"`
+	Downvotes int32    `json:"downvotes,omitempty"`
+	Formats   []string `json:"formats,omitempty"`
+	TcgDate   string   `json:"tcg_date,omitempty"`
+	OcgDate   string   `json:"ocg_date,omitempty"`
+	KonamiId  int32    `json:"konami_id,omitempty"`
+	HasEffect int32    `json:"has_effect,omitempty"`
+	MdRarity  string   `json:"md_rarity,omitempty"`
 }
 
 type Card struct {
@@ -52,6 +79,7 @@ type Card struct {
 	CardSets              []CardSetRef `json:"card_sets,omitempty"`
 	CardPrices            []CardPrice  `json:"card_prices,omitempty"`
 	BanlistInfo           *BanlistInfo `json:"banlist_info,omitempty"`
+	MiscInfo              []MiscInfo   `json:"misc_info,omitempty"`
 }
 
 type CardSetRef struct {

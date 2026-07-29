@@ -1,10 +1,11 @@
-FROM docker.io/library/golang:alpine
+FROM golang:alpine as builder
 
-WORKDIR /app
+WORKDIR /build
+COPY . .
+# RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+#     go build -ldflags="-w -s" -o /app .
+run go build -o /app .
 
-# Install dependencies first (for caching)
-COPY go.mod go.sum ./
-RUN go mod download
-
-# Set the default command to run the code directly instead of building a static binary
-CMD ["go", "run", "main.go"]
+FROM gcr.io/distroless/static-debian13
+COPY --from=builder /app /bin/app
+CMD ["/bin/app"]
