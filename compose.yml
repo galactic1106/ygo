@@ -56,7 +56,7 @@ services:
       watch:
         # 1. Sync Go source files and restart the server
         - action: sync+restart
-          path: ./go
+          path: ./go/*
           target: /build
           ignore:
             - storage/ # Ignore file uploads/storage to prevent loop restarts
