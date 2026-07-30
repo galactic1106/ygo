@@ -3,12 +3,12 @@ INSERT INTO cards (
     card_id, name, type_id, hr_type_id, frame_id, description,
     race_id, attribute_id, archetype_id,
     atk, def, level, scale, linkval,
-    cardmarket_price, tcgplayer_price, ebay_price, amazon_price, coolstuffinc_price, last_import_at
+    cardmarket_price, tcgplayer_price, ebay_price, amazon_price, coolstuffinc_price, last_import_at, tcg_date, ocg_date
 ) VALUES (
     $1, $2, $3, $4, $5, $6,
     $7, $8, $9,
     $10, $11, $12, $13, $14,
-    $15, $16, $17, $18, $19, $20
+    $15, $16, $17, $18, $19, $20, $21, $22
 )
 ON CONFLICT (card_id) DO UPDATE SET
     name = EXCLUDED.name,
@@ -29,7 +29,10 @@ ON CONFLICT (card_id) DO UPDATE SET
     ebay_price = EXCLUDED.ebay_price,
     amazon_price = EXCLUDED.amazon_price,
     coolstuffinc_price = EXCLUDED.coolstuffinc_price,
-    last_import_at = $20;
+    last_import_at = $20,
+    tcg_date = EXCLUDED.tcg_date,
+    ocg_date = EXCLUDED.ocg_date;
+
 
 -- name: UpsertBanlistInfo :exec
 INSERT INTO banlist_info (card_id, ban_tcg, ban_ocg, ban_goat)

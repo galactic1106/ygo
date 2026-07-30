@@ -82,13 +82,14 @@ CREATE TABLE cards (
     level SMALLINT,
     scale SMALLINT,
     linkval SMALLINT,
-    -- card_prices (lowest across all versions)
     cardmarket_price DECIMAL(10,2),
     tcgplayer_price DECIMAL(10,2),
     ebay_price DECIMAL(10,2),
     amazon_price DECIMAL(10,2),
     coolstuffinc_price DECIMAL(10,2),
-    last_import_at TIMESTAMP(0) NOT NULL DEFAULT NOW()
+    last_import_at TIMESTAMP(0) NOT NULL DEFAULT NOW(),
+    tcg_date DATE,
+    ocg_date DATE
 );
 
 -- Banlist info per card (ban_tcg, ban_ocg, ban_goat values: "Banned", "Limited", "Semi-Limited")

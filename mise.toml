@@ -2,6 +2,9 @@
 go = "latest"
 sqlc = "latest"
 gomigrate = "latest"
-podman = "latest"
+podman = { version = "latest", rename_exe = "podman-remote" }
 nub = "latest"
 postgres = "latest"
+
+[tasks]
+migrate = { run = 'migrate -source file://go/db/migrations/ -database "postgres://ygouser:ygopassword@0.0.0.0:5432/ygodb?sslmode=disable"' }

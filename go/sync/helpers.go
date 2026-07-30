@@ -1,9 +1,8 @@
 package sync
 
 import (
-	"os"
-
 	"github.com/jackc/pgx/v5/pgtype"
+	"os"
 )
 
 // pgtext converts a string to a nullable pgtype.Text.
@@ -44,4 +43,17 @@ func pgnum(s string) pgtype.Numeric {
 func fileExists(path string) bool {
 	_, err := os.Stat(path)
 	return err == nil
+}
+
+func pgdate(s string) pgtype.Date {
+	if s == "" {
+		return pgtype.Date{}
+	}
+
+	var date pgtype.Date
+	if err := date.Scan(s); err != nil {
+		return pgtype.Date{}
+	}
+
+	return date
 }

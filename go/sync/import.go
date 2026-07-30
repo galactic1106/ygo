@@ -54,6 +54,7 @@ func (s *Syncer) importCard(ctx context.Context, qtx *db.Queries, card Card, syn
 		prices = card.CardPrices[0]
 	}
 
+
 	err = qtx.UpsertCard(ctx, db.UpsertCardParams{
 		CardID:            int32(card.ID),
 		Name:              card.Name,
@@ -75,6 +76,8 @@ func (s *Syncer) importCard(ctx context.Context, qtx *db.Queries, card Card, syn
 		AmazonPrice:       pgnum(prices.Amazon),
 		CoolstuffincPrice: pgnum(prices.CoolStuffInc),
 		LastImportAt:      syncTimestamp,
+		TcgDate:           pgdate(card.MiscInfo[len(card.MiscInfo)-1].TcgDate),
+		OcgDate:           pgdate(card.MiscInfo[len(card.MiscInfo)-1].OcgDate),
 	})
 	if err != nil {
 		return fmt.Errorf("upserting card: %w", err)

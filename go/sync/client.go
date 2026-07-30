@@ -16,7 +16,7 @@ import (
 const (
 	BaseURL         = "https://db.ygoprodeck.com/api/v7"
 	VersionURL      = BaseURL + "/checkDBVer.php"
-	CardsURL        = BaseURL + "/cardinfo.php?misc=1"
+	CardsURL        = BaseURL + "/cardinfo.php?misc=yes"
 	SetsURL         = BaseURL + "/cardsets.php"
 	BaseImageURL    = "https://images.ygoprodeck.com/images"
 	SmallImageURL   = BaseImageURL + "/cards_small/"
@@ -32,19 +32,6 @@ type VersionResponse struct {
 type CardsResponse struct {
 	Data []Card `json:"data"`
 }
-/*
-beta_name
-views
-viewsweek
-upvotes
-downvotes
-formats
-tcg_date
-ocg_date
-konami_id
-has_effect
-md_rarity
-*/
 
 type MiscInfo struct {
 	BetaName  string   `json:"beta_name,omitempty"`
@@ -129,6 +116,10 @@ func FetchJSON(ctx context.Context, limiter *rate.Limiter, url string, target an
 		return fmt.Errorf("fetching %s: %w", url, err)
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("bad status: %s", resp.Status)
+	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {

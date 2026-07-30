@@ -46,6 +46,8 @@ type Card struct {
 	AmazonPrice       pgtype.Numeric   `json:"amazon_price"`
 	CoolstuffincPrice pgtype.Numeric   `json:"coolstuffinc_price"`
 	LastImportAt      pgtype.Timestamp `json:"last_import_at"`
+	TcgDate           pgtype.Date      `json:"tcg_date"`
+	OcgDate           pgtype.Date      `json:"ocg_date"`
 }
 
 type CardLinkMarker struct {
