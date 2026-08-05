@@ -2,9 +2,10 @@
 go = "latest"
 sqlc = "latest"
 gomigrate = "latest"
-podman = { version = "latest", rename_exe = "podman-remote" }
-nub = "latest"
 postgres = "latest"
+"aqua:a-h/templ" = "latest"
+npm = "latest"
+nub = { version = "latest", allow_builds = ["@nubjs/nub"] }
 
 [tasks]
 migrate = { run = 'migrate -source file://go/db/migrations/ -database "postgres://ygouser:ygopassword@0.0.0.0:5432/ygodb?sslmode=disable"' }
