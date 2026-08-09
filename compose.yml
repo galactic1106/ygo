@@ -31,7 +31,11 @@ services:
     volumes:
       - postgres_auth_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${AUTH_POSTGRES_USER} -d ${AUTH_POSTGRES_DB}"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${AUTH_POSTGRES_USER} -d ${AUTH_POSTGRES_DB}",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -45,7 +49,7 @@ services:
       target: builder
     ports:
       - "8080:8080"
-    container_name: ygo-api
+    container_name: api
     command: ["go", "run", "main.go"]
     env_file: .env
     volumes:
@@ -56,7 +60,7 @@ services:
       watch:
         # 1. Sync Go source files and restart the server
         - action: sync+restart
-          path: ./go/*
+          path: ./go
           target: /build
           ignore:
             - storage/ # Ignore file uploads/storage to prevent loop restarts
