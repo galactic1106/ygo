@@ -1,11 +1,19 @@
-FROM golang:alpine as builder
+FROM golang:alpine AS builder
 
 WORKDIR /build
 COPY . .
-# RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
-#     go build -ldflags="-w -s" -o /app .
-run go build -o /app .
 
-FROM gcr.io/distroless/static-debian13
+# CRITICAL: For a scratch image, you MUST statically link the binary using CGO_ENABLED=0
+# Otherwise, the container will crash with a "not found" error looking for libc.
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+    go build -ldflags="-w -s" -o /app .
+
+FROM scratch
+EXPOSE 8080
+
+USER 10001:10001
 COPY --from=builder /app /bin/app
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD ["/bin/app", "-healthcheck"]
+
 CMD ["/bin/app"]
