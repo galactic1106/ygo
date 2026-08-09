@@ -15,6 +15,7 @@ func Setup(router *gin.Engine, q *db.Queries, limiter *rate.Limiter) {
 	cardGroup := router.Group("/cards")
 	{
 		cardGroup.GET("/:id", handlers.GetCard(q))
+		cardGroup.GET("/random/id/:limit", handlers.GetRandomIds(q))
 	}
 
 	imageGroup := router.Group("/images/:id")
