@@ -78,6 +78,49 @@ services:
       - ygo-network
     restart: unless-stopped
 
+  svelte:
+    build:
+      context: ./svelte
+      dockerfile: Containerfile
+      target: builder
+    command:
+      npm run dev -- --force --host 0.0.0.0
+    container_name: svelte
+    env_file: ./.env
+    ports:
+      - "5173:5173"
+    develop:
+      watch:
+        - action: sync
+          path: ./svelte/src
+          target: /app/src
+
+        - action: sync
+          path: ./svelte/static
+          target: /app/static
+
+        - action: rebuild
+          path: ./svelte/package.json
+        - action: rebuild
+          path: ./svelte/package-lock.json
+        - action: rebuild
+          path: ./svelte/tsconfig.json
+        - action: rebuild
+          path: ./svelte/vite.config.ts
+        - action: rebuild
+          path: ./svelte/components.json
+        - action: rebuild
+          path: ./.env
+
+    depends_on:
+      postgres-auth:
+        condition: service_healthy
+      api:
+        condition: service_started
+    networks:
+      - ygo-network
+    restart: unless-stopped
+
   # angie:
   #   build:
   #     context: ./angie
@@ -104,46 +147,6 @@ services:
   #         path: ./angie/Containerfile
   #   depends_on:
   #     - api
-  #   networks:
-  #     - ygo-network
-  #   restart: unless-stopped
-
-  # frontend:
-  #   build:
-  #     context: ./svelte
-  #     dockerfile: Containerfile
-  #   container_name: ygo-frontend
-  #   env_file: svelte/.env
-  #   ports:
-  #     - "3000:3000"
-  #   develop:
-  #     watch:
-  #       - action: sync
-  #         path: ./src
-  #         target: /app/src
-  #         ignore:
-  #           - node_modules/
-  #
-  #       # 2. Watch the Svelte root HTML entrypoint
-  #       - action: sync
-  #         path: ./src/app.html
-  #         target: /app/src/app.html
-  #
-  #       # 3. Watch config files
-  #       - action: sync
-  #         path: ./vite.config.ts # or vite.config.js
-  #         target: /app/vite.config.ts
-  #
-  #       # 4. Rebuild if you install new Svelte/npm packages
-  #       - action: rebuild
-  #         path: ./package.json
-  #       - action: rebuild
-  #         path: ./bun.lockb
-  #   depends_on:
-  #     postgres-auth:
-  #       condition: service_healthy
-  #     api:
-  #       condition: service_started
   #   networks:
   #     - ygo-network
   #   restart: unless-stopped
